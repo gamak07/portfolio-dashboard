@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import Button from "./Button";
 import {
@@ -32,15 +32,26 @@ const navs = [
 ];
 
 const Sidebar = () => {
+  const [collapseSidebar, setCollapseSidebar] = useState(false);
+  const handleSidebarCollapse = () => {
+    setCollapseSidebar((prev) => !prev);
+  };
   return (
-    <aside className="h-full w-64 border-r border-gray-200 bg-white transition-all duration-300 ease-in-out dark:border-gray-700 dark:bg-gray-800">
+    <aside
+      className={`h-full ${collapseSidebar ? "w-16" : "w-64"} border-r border-gray-200 bg-white transition-all duration-300 ease-in-out dark:border-gray-700 dark:bg-gray-800`}
+    >
       {/* logo */}
       <div className="flex h-full flex-col">
         <div className="flex h-16 items-center justify-between border-b border-gray-200 px-4 dark:border-gray-700">
-          <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
-            Gamak-07
-          </div>
-          <Button className="cursor-pointer rounded-md p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
+          {!collapseSidebar && (
+            <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
+              Gamak-07
+            </div>
+          )}
+          <Button
+            className="cursor-pointer rounded-md p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+            onClick={handleSidebarCollapse}
+          >
             <FaChevronLeft />
           </Button>
         </div>
@@ -63,7 +74,9 @@ const Sidebar = () => {
                       >
                         {nav.icon}
                       </span>
-                      <span className="ml-3">{nav.name}</span>
+                      {!collapseSidebar && (
+                        <span className="ml-3">{nav.name}</span>
+                      )}
                     </div>
                   )}
                 </NavLink>
@@ -75,7 +88,7 @@ const Sidebar = () => {
         <div className="border-t border-gray-200 p-4 dark:border-gray-700">
           <div className="flex items-center rounded-lg p-2 text-gray-500 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
             <FaSignOutAlt />
-            <span className="ml-3">Logout</span>
+            {!collapseSidebar && <span className="ml-3">Logout</span>}
           </div>
         </div>
       </div>
