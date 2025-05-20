@@ -8,6 +8,7 @@ import {
   FaSync,
 } from "react-icons/fa";
 import ChartMenu from "./ChartMenu";
+import VisitorsSourcesChart from "./charts/VisitorsSourcesChart";
 
 const VisitorsSources = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
@@ -51,6 +52,7 @@ const VisitorsSources = () => {
           )}
         </div>
       </div>
+      <VisitorsSourcesChart />
     </div>
   );
 };

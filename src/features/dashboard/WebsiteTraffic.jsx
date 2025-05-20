@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import Button from "../../components/Button";
+import WeeklyTrafficChart from "./charts/WeeklyTrafficChart";
+import MonthlyTrafficChart from "./charts/MonthlyTrafficChart";
+import YearlyTrafficChart from "./charts/YearlyTrafficChart";
 
 const WebsiteTraffic = () => {
   const [activeTab, setActiveTab] = useState("Weekly");
@@ -33,6 +36,9 @@ const WebsiteTraffic = () => {
           </Button>
         </div>
       </div>
+      {activeTab === "Weekly" && <WeeklyTrafficChart />}
+      {activeTab === "Monthly" && <MonthlyTrafficChart />}
+      {activeTab === "Yearly" && <YearlyTrafficChart />}
     </div>
   );
 };

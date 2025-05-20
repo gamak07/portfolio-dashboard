@@ -8,6 +8,7 @@ import {
   FaSync,
 } from "react-icons/fa";
 import ChartMenu from "./ChartMenu";
+import ProjectTechnologiesChart from "./charts/ProjectTechnologiesChart";
 
 const ProjectTechnologies = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
@@ -51,6 +52,7 @@ const ProjectTechnologies = () => {
           )}
         </div>
       </div>
+      <ProjectTechnologiesChart />
     </div>
   );
 };

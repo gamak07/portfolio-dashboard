@@ -8,6 +8,7 @@ import {
   FaSync,
 } from "react-icons/fa";
 import ChartMenu from "./ChartMenu";
+import PageEngagementChart from "./charts/PageEngagementChart";
 
 const PageEngagement = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
@@ -51,6 +52,7 @@ const PageEngagement = () => {
           )}
         </div>
       </div>
+        <PageEngagementChart />
     </div>
   );
 };
