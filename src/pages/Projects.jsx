@@ -11,8 +11,8 @@ const Projects = () => {
     <div>
         <Breadcrum />
         <Header />
-        <Filters />
-        <ProjectsList />
+        {/* <Filters /> */}
+        {/* <ProjectsList /> */}
         <LoadMore />
     </div>
   )

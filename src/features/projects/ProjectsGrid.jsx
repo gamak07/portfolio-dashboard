@@ -77,19 +77,19 @@ const projects = [
   },
 ];
 
-const ProjectsList = () => {
+const ProjectsGrid = () => {
   const [showMenuDropdown, setShowMenuDropdown] = useState(null);
   const handleMenuDropdown = (index) => {
     setShowMenuDropdown((prev) => (prev === index ? null : index));
   };
   return (
-    <div className="flex flex-col gap-6">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {projects.map((project, i) => (
         <div
           key={i}
-          className="flex rounded-lg bg-white shadow-sm transition-all duration-300 hover:shadow-md dark:bg-gray-800"
+          className="overflow-hidden rounded-lg bg-white shadow-sm transition-all duration-300 hover:shadow-md dark:bg-gray-800"
         >
-          <div className="relative w-1/3 ">
+          <div className="relative w-full">
             <img
               src={project.image}
               alt={project.title}
@@ -105,7 +105,7 @@ const ProjectsList = () => {
               {showMenuDropdown === i && <ProjectMenuDropdown />}
             </div>
           </div>
-          <div className="p-4">
+          <div className="-z-70 p-4">
             <div className="mb-2 flex items-start justify-between">
               <h3 className="cursor-pointer text-lg font-semibold text-gray-800 hover:text-indigo-600 dark:text-white">
                 {project.title}
@@ -132,12 +132,8 @@ const ProjectsList = () => {
             {project.status === "In Progress" && (
               <div className="mb-3">
                 <div className="mb-1 flex justify-between text-xs">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Progress
-                  </span>
-                  <span className="font-medium dark:text-gray-400">
-                    {project.progress}%
-                  </span>
+                  <span className="text-gray-600 dark:text-gray-400">Progress</span>
+                  <span className="font-medium dark:text-gray-400">{project.progress}%</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-gray-200 dark:bg-white">
                   <div
@@ -166,4 +162,4 @@ const ProjectsList = () => {
   );
 };
 
-export default ProjectsList;
+export default ProjectsGrid;
