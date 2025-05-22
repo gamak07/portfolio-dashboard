@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaEye, FaStar, FaTrashAlt } from "react-icons/fa";
 import Button from "../../components/Button";
+import TestimonialDetails from "./TestimonialDetails";
 
 const testimonials = [
   {
@@ -54,11 +55,18 @@ const testimonials = [
 ];
 
 const TestimonialsList = () => {
+  const [showModal, setShowModal] = useState(null);
+  const handleShowModal = (index) => {
+    setShowModal((prev) => (prev === index ? null : index));
+  };
   return (
     // <div className="rounded-lg bg-white p-4 shadow-sm">
     <div className="space-y-4">
       {testimonials.map((testimonial, i) => (
-        <div className="rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800" key={i}>
+        <div
+          className="rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800"
+          key={i}
+        >
           <div className="flex items-start">
             <img
               src={testimonial.image}
@@ -74,11 +82,9 @@ const TestimonialsList = () => {
                   </h3>
                   <span className="mt-1 flex items-center">
                     <div className="flex">
-                      <FaStar className="text-yellow-500" />
-                      <FaStar className="text-yellow-500" />
-                      <FaStar className="text-yellow-500" />
-                      <FaStar className="text-yellow-500" />
-                      <FaStar className="text-yellow-500" />
+                      {[...Array(5)].map((_, i) => (
+                        <FaStar key={i} className="text-yellow-500" />
+                      ))}
                     </div>
                     <span className="ml-2 text-sm text-gray-500 dark:text-gray-300">
                       {testimonial.date}
@@ -91,16 +97,24 @@ const TestimonialsList = () => {
                   {testimonial.status}
                 </span>
               </div>
-              <p className="mt-2 text-gray-600 dark:text-gray-400">{testimonial.comments}</p>
+              <p className="mt-2 text-gray-600 dark:text-gray-400">
+                {testimonial.comments}
+              </p>
             </div>
 
-            <div className="flex space-x-2 ml-4">
-              <Button className="cursor-pointer rounded-full p-2 text-yellow-600 hover:bg-yellow-50">
+            <div className="ml-4 flex space-x-2">
+              <Button
+                className="cursor-pointer rounded-full p-2 text-yellow-600 hover:bg-yellow-50"
+                onClick={() => handleShowModal(i)}
+              >
                 <FaEye />
               </Button>
               <Button className="cursor-pointer rounded-full p-2 text-red-600 hover:bg-red-50">
                 <FaTrashAlt />
               </Button>
+              {showModal === i && (
+                <TestimonialDetails setShowModal={setShowModal} />
+              )}
             </div>
           </div>
         </div>
