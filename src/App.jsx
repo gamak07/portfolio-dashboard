@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Projects from "./pages/Projects";
 import Blogposts from "./pages/Blogposts";
+import Testimonials from "./pages/Testimonials";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
               <Route element={<Dashboard />} path="/" index />
               <Route element={<Projects />} path="/projects" />
               <Route element={<Blogposts />} path="/blog_posts" />
+              <Route element={<Testimonials />} path="/testimonials" />
             </Route>
           </Routes>
         </BrowserRouter>
