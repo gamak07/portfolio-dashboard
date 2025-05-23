@@ -6,6 +6,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Projects from "./pages/Projects";
 import Blogposts from "./pages/Blogposts";
 import Testimonials from "./pages/Testimonials";
+import Messages from "./pages/Messages";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
               <Route element={<Projects />} path="/projects" />
               <Route element={<Blogposts />} path="/blog_posts" />
               <Route element={<Testimonials />} path="/testimonials" />
+              <Route element={<Messages />} path="/messages" />
             </Route>
           </Routes>
         </BrowserRouter>
