@@ -56,7 +56,7 @@ const TableView = () => {
   return (
     <div className="rounded-lg bg-white shadow dark:bg-gray-800">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
           <thead className="bg-gray-50 dark:bg-gray-700">
             <tr>
               <th
@@ -67,31 +67,31 @@ const TableView = () => {
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
+                className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400"
               >
                 Job title
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
+                className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400"
               >
                 status
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
+                className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400"
               >
                 date applied
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
+                className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400"
               >
                 contact
               </th>
               <th
                 scope="col"
-                className="px-6 py-3 text-right text-xs font-medium tracking-wider text-gray-500 uppercase"
+                className="px-6 py-3 text-right text-xs font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400"
               >
                 actions
               </th>

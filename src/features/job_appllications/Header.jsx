@@ -9,9 +9,15 @@ import {
 import Button from "../../components/Button";
 import TableView from "./TableView";
 import CardView from "./CardView";
+import AddNewApplication from "./AddNewApplication";
 
 const Header = () => {
   const [activeView, setActiveView] = useState("table");
+  const [showModal, setShowModal] = useState(false);
+
+  const handleModal = () => {
+    setShowModal((prev) => !prev);
+  };
 
   const handleViewType = (view) => {
     setActiveView(view);
@@ -20,7 +26,10 @@ const Header = () => {
     <>
       <div className="mb-6 flex flex-wrap items-center justify-between rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800">
         <div className="mb-4 flex items-center space-x-4 sm:mb-0">
-          <div className="flex cursor-pointer items-center rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+          <div
+            className="flex cursor-pointer items-center rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            onClick={handleModal}
+          >
             <FaPlus className="mr-2" /> Add New Application
           </div>
           <select className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 outline-none focus:ring-2 focus:ring-indigo-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200">
@@ -59,12 +68,12 @@ const Header = () => {
             >
               <FaThLarge />
             </Button>
-            
           </div>
         </div>
       </div>
       {activeView === "table" && <TableView />}
       {activeView === "card" && <CardView />}
+      {showModal && <AddNewApplication setShowModal={setShowModal} />}
     </>
   );
 };

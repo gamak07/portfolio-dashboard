@@ -64,7 +64,7 @@ const CardView = () => {
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {jobs.map((job, i) => (
         <div
-          className="rounded-lg bg-white shadow transition-shadow hover:shadow-md"
+          className="rounded-lg bg-white shadow transition-shadow hover:shadow-md dark:bg-gray-800"
           key={i}
         >
           <div className="p-5">
@@ -74,10 +74,10 @@ const CardView = () => {
                   N
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-lg font-medium text-gray-900">
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-gray-200">
                     {job.company}
                   </h3>
-                  <p className="text-sm text-gray-600">{job.jobTitle}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{job.jobTitle}</p>
                 </div>
               </div>
               <span
@@ -89,20 +89,20 @@ const CardView = () => {
             <div className="mb-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs text-gray-500">Applied On</p>
-                  <p className="text-sm font-medium">{job.dateApplied}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Applied On</p>
+                  <p className="text-sm font-medium dark:text-gray-100">{job.dateApplied}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">Contact</p>
-                  <p className="text-sm font-medium">{job.contact}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Contact</p>
+                  <p className="text-sm font-medium dark:text-gray-100">{job.contact}</p>
                 </div>
               </div>
             </div>
             <div className="mb-4">
-              <p className="mb-1 text-xs text-gray-500">Contact</p>
-              <p className="line-clamp-2 text-sm text-gray-700">{job.notes}</p>
+              <p className="mb-1 text-xs text-gray-500 dark:text-gray-400">Contact</p>
+              <p className="line-clamp-2 text-sm text-gray-700 dark:text-gray-600">{job.notes}</p>
             </div>
-            <div className="flex items-center justify-between border-t border-gray-100 pt-2">
+            <div className="flex items-center justify-between border-t border-gray-100 pt-2 dark:border-gray-600">
               <a
                 href=""
                 className="cursor-pointer text-xs text-indigo-600 hover:text-indigo-900"
