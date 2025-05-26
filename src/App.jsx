@@ -8,6 +8,7 @@ import Blogposts from "./pages/Blogposts";
 import Testimonials from "./pages/Testimonials";
 import Messages from "./pages/Messages";
 import JobApplications from "./pages/JobApplications";
+import Newsletters from "./pages/Newsletters";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
               <Route element={<Testimonials />} path="/testimonials" />
               <Route element={<Messages />} path="/messages" />
               <Route element={<JobApplications />} path="/job_applications" />
+              <Route element={<Newsletters />} path="/newsletter" />
             </Route>
           </Routes>
         </BrowserRouter>
