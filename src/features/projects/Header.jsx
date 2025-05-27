@@ -11,6 +11,7 @@ import CategoryDropdown from "./CategoryDropdown";
 import ProjectsGrid from "./ProjectsGrid";
 import ProjectsList from "./ProjectsList";
 import Filters from "./Filters";
+import AddNewProjects from "./AddNewProject/AddNewProjects";
 
 const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -22,10 +23,18 @@ const Header = () => {
   const handleList = (list) => {
     setActiveList(list);
   };
+
+  const [showAddNewProjectModal, setAddNewProjectModal] = useState(false);
+  const handleNewProjectModal = () => {
+    setAddNewProjectModal((prev) => !prev);
+  };
   return (
     <>
       <div className="gap-d mb-6 flex flex-col justify-between md:flex-row md:items-center">
-        <Button className="flex cursor-pointer items-center rounded-lg bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-700 dark:bg-indigo-800 dark:text-gray-300 dark:hover:bg-indigo-900">
+        <Button
+          className="flex cursor-pointer items-center rounded-lg bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-700 dark:bg-indigo-800 dark:text-gray-300 dark:hover:bg-indigo-900"
+          onClick={handleNewProjectModal}
+        >
           <FaPlus className="mr-2" /> Add New Project
         </Button>
 
@@ -64,8 +73,9 @@ const Header = () => {
         </div>
       </div>
       <Filters />
-      {activeList === 'grid' && <ProjectsGrid />}
-      {activeList === 'list' && <ProjectsList />}
+      {activeList === "grid" && <ProjectsGrid />}
+      {activeList === "list" && <ProjectsList />}
+      {showAddNewProjectModal && <AddNewProjects setAddNewProjectModal={setAddNewProjectModal} />}
     </>
   );
 };

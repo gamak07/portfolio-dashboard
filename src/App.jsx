@@ -9,10 +9,20 @@ import Testimonials from "./pages/Testimonials";
 import Messages from "./pages/Messages";
 import JobApplications from "./pages/JobApplications";
 import Newsletters from "./pages/Newsletters";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function App() {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 0,
+      },
+    },
+  });
   return (
-    <div>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <ThemeProvider>
         <BrowserRouter>
           <Routes>
@@ -28,7 +38,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
-    </div>
+    </QueryClientProvider>
   );
 }
 
