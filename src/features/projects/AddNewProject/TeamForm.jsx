@@ -1,70 +1,179 @@
-import React from "react";
+// components/TeamForm.jsx
+import React, { useState } from "react";
+import { useFormContext, useFieldArray } from "react-hook-form";
 import Button from "../../../components/Button";
 import { FaCirclePlus } from "react-icons/fa6";
+import { FaTimes } from "react-icons/fa";
 
 const TeamForm = () => {
+  const {
+    register,
+    control,
+    watch,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useFormContext();
+
+  // Local state for the tag input
+  const [tagInput, setTagInput] = useState("");
+
+  // Field array for teamMembers (array of { name, role })
+  const {
+    fields: memberFields,
+    append: appendMember,
+    remove: removeMember,
+  } = useFieldArray({
+    control,
+    name: "teamMembers",
+  });
+
+  // Watch the tags array (string[])
+  const tags = watch("tags") || [];
+
+  // Add a new tag to the tags array
+  const handleAddTag = () => {
+    const trimmed = tagInput.trim();
+    if (!trimmed) return;
+    const existing = getValues("tags") || [];
+    if (existing.includes(trimmed)) {
+      setTagInput("");
+      return;
+    }
+    setValue("tags", [...existing, trimmed], { shouldValidate: true });
+    setTagInput("");
+  };
+
+  // Remove a tag by index
+  const handleRemoveTag = (indexToRemove) => {
+    const current = getValues("tags") || [];
+    const updated = current.filter((_, idx) => idx !== indexToRemove);
+    setValue("tags", updated, { shouldValidate: true });
+  };
+
   return (
-    <form className="space-y-4 overflow-x-auto">
+    <div className="space-y-4 overflow-x-auto p-4">
+      {/* Tags */}
       <div>
-        <label
-          htmlFor="tags"
-          className='text-gray-800" mb-1 text-sm font-medium'
-        >
-          Tag
+        <label htmlFor="tags" className="text-gray-800 mb-1 text-sm font-medium">
+          Tags
         </label>
         <div className="flex items-center gap-3">
           <input
             type="text"
-            name="tags"
-            className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-500 outline-none focus:ring-2 focus:ring-indigo-500"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-500"
             placeholder="Add tag..."
           />
-          <Button className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+          <Button
+            type="button"
+            onClick={handleAddTag}
+            className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+          >
             Add
           </Button>
         </div>
+        {errors.tags && (
+          <p className="text-red-500 text-sm">{errors.tags.message}</p>
+        )}
+        <div className="mt-2 flex flex-wrap gap-2">
+          {tags.map((tag, idx) => (
+            <span
+              key={idx}
+              className="flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-sm text-gray-700"
+            >
+              {tag}
+              <button
+                type="button"
+                onClick={() => handleRemoveTag(idx)}
+                className="text-red-500 hover:text-red-700"
+              >
+                <FaTimes size={12} />
+              </button>
+            </span>
+          ))}
+        </div>
       </div>
 
+      {/* Category */}
       <div>
-        <label
-          htmlFor="category"
-          className="mb-1 text-sm font-medium text-gray-800"
-        >
+        <label htmlFor="category" className="mb-1 text-sm font-medium text-gray-800">
           Category
         </label>
         <select
-          name="category"
-          className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-500 outline-none focus:ring-2 focus:ring-indigo-500"
+          {...register("category")}
+          className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-500"
         >
-          <option value="">Personal</option>
-          <option value="">Freelance</option>
-          <option value="">Hackhaton</option>
+          <option value="">Select category</option>
+          <option value="Personal">Personal</option>
+          <option value="Freelance">Freelance</option>
+          <option value="Hackhaton">Hackhaton</option>
         </select>
+        {errors.category && (
+          <p className="text-red-500 text-sm">{errors.category.message}</p>
+        )}
       </div>
 
+      {/* Team Members */}
       <div>
         <div className="mb-2 flex items-center justify-between">
-          <label htmlFor="Team" className="text-sm font-medium text-gray-800">
-            Team Members
-          </label>
-          <Button className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-200">
+          <label className="text-sm font-medium text-gray-800">Team Members</label>
+          <Button
+            type="button"
+            onClick={() => appendMember({ name: "", role: "" })}
+            className="flex items-center gap-2 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-200"
+          >
             <FaCirclePlus size={15} /> Add Member
           </Button>
         </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <input
-            type="text"
-            className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-500 outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="Name"
-          />
-          <input
-            type="text"
-            className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-500 outline-none focus:ring-2 focus:ring-indigo-500"
-            placeholder="Role"
-          />
+        {errors.teamMembers && (
+          <p className="text-red-500 text-sm">{errors.teamMembers.message}</p>
+        )}
+        <div className="space-y-3">
+          {memberFields.map((field, index) => (
+            <div
+              key={field.id}
+              className="flex flex-col gap-2 md:flex-row md:items-center md:gap-3"
+            >
+              <div className="flex-1">
+                <input
+                  type="text"
+                  {...register(`teamMembers.${index}.name`)}
+                  placeholder="Name"
+                  className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                {errors.teamMembers?.[index]?.name && (
+                  <p className="text-red-500 text-sm">
+                    {errors.teamMembers[index].name.message}
+                  </p>
+                )}
+              </div>
+              <div className="flex-1">
+                <input
+                  type="text"
+                  {...register(`teamMembers.${index}.role`)}
+                  placeholder="Role"
+                  className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                {errors.teamMembers?.[index]?.role && (
+                  <p className="text-red-500 text-sm">
+                    {errors.teamMembers[index].role.message}
+                  </p>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => removeMember(index)}
+                className="text-red-500 hover:text-red-700 self-start md:self-auto"
+              >
+                <FaTimes size={16} />
+              </button>
+            </div>
+          ))}
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 
