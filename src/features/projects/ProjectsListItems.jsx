@@ -16,7 +16,7 @@ const ProjectsListItems = ({
     title,
     description,
     status,
-    image,
+    thumbnail_url,
     visits,
     stars,
     tech_stack,
@@ -30,7 +30,7 @@ const ProjectsListItems = ({
     >
       <div className="relative w-1/3">
         <img
-          src={image}
+          src={thumbnail_url}
           alt={title}
           className="h-48 w-full object-cover object-top"
         />

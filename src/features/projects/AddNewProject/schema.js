@@ -1,113 +1,80 @@
-// schemas/projectInfoSchema.ts
+// schemas/projectSchemas.js
 import { z } from "zod";
-const MAX_FILE_SIZE = 1500 * 1024; // 1500kb
 
+const MAX_FILE_SIZE = 1500 * 1024; // 1.5 MB
+
+// 1) A refinement that ensures a File is ≤ 1.5 MB:
+const fileRefinement = z
+  .instanceof(File)
+  .refine((file) => file.size <= MAX_FILE_SIZE, {
+    message: "Each file must be ≤ 1.5 MB",
+  });
+
+// 2) Info section
 export const infoSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
-  slug: z.string().optional(), // Will be auto-generated if empty
+  slug: z.string().optional(),
   description: z.string().min(1, { message: "Description is required" }),
-  type: z.enum(["web", "mobile"], {
-    message: "Type is required",
-  }),
-  status: z.enum(["in progress", "completed", "paused", "in review"], {
-    message: "Status is required",
-  }),
+  type: z.enum(["web", "mobile"], { message: "Type is required" }),
+  status: z.enum(
+    ["in progress", "completed", "paused", "in review"],
+    { message: "Status is required" }
+  ),
 });
 
+// 3) Media section: allow either a raw File (pre-upload) or a URL string (post-upload)
 export const mediaSchema = z.object({
-  // Thumbnail (single-file) field
-  image: z
-    .any()
-    .optional()
-    .refine(
-      (val) => {
-        // If nothing is provided (undefined or empty FileList), it's valid:
-        if (!val) return true;
-        if (val instanceof FileList && val.length === 0) return true;
-
-        // Otherwise, grab the first File from the FileList (or val itself)
-        const file = val instanceof FileList ? val.item(0) : val;
-
-        // Now ensure it’s a File and under size limit
-        return file instanceof File && file.size <= MAX_FILE_SIZE;
-      },
-      {
-        message: "Thumbnail must be ≤ 1500kb",
-      },
-    ),
-
-  // Gallery (multiple-file) field
+  image: z.union([fileRefinement, z.string().url("Invalid URL")]).optional(),
   gallery: z
-    .any()
-    .optional()
-    .refine(
-      (val) => {
-        // If nothing is provided (undefined or empty FileList), it's valid:
-        if (!val) return true;
-        if (val instanceof FileList && val.length === 0) return true;
-
-        // Otherwise, convert FileList to array of File objects
-        const filesArray = Array.from(val instanceof FileList ? val : []);
-
-        // Ensure every file is under the size limit
-        return filesArray.every(
-          (file) => file instanceof File && file.size <= MAX_FILE_SIZE,
-        );
-      },
-      {
-        message: "Each gallery image must be ≤ 1500kb",
-      },
-    ),
-
-  // Optional URLs (allow empty string or valid URL)
-  demoUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
-  codeUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
+    .union([z.array(fileRefinement), z.array(z.string().url("Invalid URL"))])
+    .optional(),
+  demo_url: z.string().url("Invalid URL").optional().or(z.literal("")),
+  source_code_url: z.string().url("Invalid URL").optional().or(z.literal("")),
 });
 
+// 4) Tech section
 export const techSchema = z.object({
-  techStack: z.array(z.string().min(1, "Tech cannot be empty")).optional(),
+  tech_stack: z
+    .array(z.string().min(1, "Tech cannot be empty"))
+    .optional(),
   frontend: z.string().optional().or(z.literal("")),
   backend: z.string().optional().or(z.literal("")),
   database: z.string().optional().or(z.literal("")),
 });
 
-const timelineBase = z.object({
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
+// 5) Timeline section
+export const timelineBase = z.object({
+  start_date: z.string().optional(),
+  end_date: z.string().optional(),
   duration: z.string().optional(),
 });
 
+// 6) Features section
 export const featuresSchema = z.object({
-  features: z.string().optional(), // This field is optional
-
+  features: z.string().optional(),
   challenges: z.string().optional(),
-
   learnings: z.string().optional(),
 });
 
-// schemas/teamSchema.js
+// 7) Team section
 export const teamSchema = z.object({
-  // tags: optional array of non-empty strings
   tags: z.array(z.string().min(1, "Tag cannot be empty")).optional(),
-
-  // category: optional enum
   category: z
     .enum(["Personal", "Freelance", "Hackhaton"], {
       errorMap: () => ({ message: "Invalid category" }),
     })
     .optional(),
-
-  // teamMembers: optional array of member objects
-  teamMembers: z
+  team_members: z
     .array(
       z.object({
         name: z.string().min(1, "Name is required"),
         role: z.string().min(1, "Role is required"),
-      }),
+      })
     )
     .optional(),
 });
 
+// 8) Combine everything into rootSchema and enforce date ordering
 export const rootSchema = infoSchema
   .merge(mediaSchema)
   .merge(techSchema)
@@ -115,12 +82,12 @@ export const rootSchema = infoSchema
   .merge(teamSchema)
   .merge(timelineBase)
   .refine(
-    (data) =>
-      !data.startDate ||
-      !data.endDate ||
-      new Date(data.startDate) <= new Date(data.endDate),
+    (data) => {
+      if (!data.start_date || !data.end_date) return true;
+      return new Date(data.start_date) <= new Date(data.end_date);
+    },
     {
       message: "End date must be after or equal to start date",
-      path: ["endDate"],
-    },
+      path: ["end_date"],
+    }
   );
