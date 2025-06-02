@@ -41,7 +41,7 @@ const ProjectsListItems = ({
           <div className="cursor-pointer rounded-full bg-white p-2 opacity-90 shadow-sm dark:bg-gray-800">
             <FaEllipsisH className="text-gray-600 dark:text-gray-400" />
           </div>
-          {showMenuDropdown === id && <ProjectMenuDropdown />}
+          {showMenuDropdown === id && <ProjectMenuDropdown projectId={id} />}
         </div>
       </div>
       <div className="w-2/3 p-4">

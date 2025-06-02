@@ -11,6 +11,7 @@ import JobApplications from "./pages/JobApplications";
 import Newsletters from "./pages/Newsletters";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import ProjectDetails from "./pages/ProjectDetails";
 
 function App() {
   const queryClient = new QueryClient({
@@ -35,6 +36,7 @@ function App() {
               <Route element={<JobApplications />} path="/job_applications" />
               <Route element={<Newsletters />} path="/newsletter" />
             </Route>
+            <Route element={<ProjectDetails />} path="/project/:id" />
           </Routes>
         </BrowserRouter>
       </ThemeProvider>

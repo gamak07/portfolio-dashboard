@@ -25,7 +25,7 @@ const TeamForm = () => {
     remove: removeMember,
   } = useFieldArray({
     control,
-    name: "teamMembers",
+    name: "team_members",
   });
 
   // Watch the tags array (string[])
@@ -127,8 +127,8 @@ const TeamForm = () => {
             <FaCirclePlus size={15} /> Add Member
           </Button>
         </div>
-        {errors.teamMembers && (
-          <p className="text-red-500 text-sm">{errors.teamMembers.message}</p>
+        {errors.team_members && (
+          <p className="text-red-500 text-sm">{errors.team_members.message}</p>
         )}
         <div className="space-y-3">
           {memberFields.map((field, index) => (
@@ -139,26 +139,26 @@ const TeamForm = () => {
               <div className="flex-1">
                 <input
                   type="text"
-                  {...register(`teamMembers.${index}.name`)}
+                  {...register(`team_members.${index}.name`)}
                   placeholder="Name"
                   className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-500"
                 />
-                {errors.teamMembers?.[index]?.name && (
+                {errors.team_members?.[index]?.name && (
                   <p className="text-red-500 text-sm">
-                    {errors.teamMembers[index].name.message}
+                    {errors.team_members[index].name.message}
                   </p>
                 )}
               </div>
               <div className="flex-1">
                 <input
                   type="text"
-                  {...register(`teamMembers.${index}.role`)}
+                  {...register(`team_members.${index}.role`)}
                   placeholder="Role"
                   className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-500"
                 />
                 {errors.teamMembers?.[index]?.role && (
                   <p className="text-red-500 text-sm">
-                    {errors.teamMembers[index].role.message}
+                    {errors.team_members[index].role.message}
                   </p>
                 )}
               </div>

@@ -51,7 +51,7 @@ const Navs = () => {
 
   const onSubmit = async (data) => {
     try {
-      const {image, gallery, ...rest} = data
+      const { image, gallery, ...rest } = data;
       // 1️⃣ Build features array (same as before)
       const featuresArray = rest.features
         ? rest.features
@@ -68,7 +68,6 @@ const Navs = () => {
           .replace(/(^-|-$)+/g, "");
       }
 
-
       // 5️⃣ Now build the final payload, merging URLs where needed
       const payload = {
         title: rest.title,
@@ -79,8 +78,8 @@ const Navs = () => {
 
         // ...(rest.thumbnail_url ? { thumbnail_url: rest.thumbnail_url } : {}),
         // ...(rest.gallery?.length ? { gallery: rest.gallery } : {}),
-        ...(rest.demo_url ? { demo_url: rest.demo_url } : {}),
-        ...(rest.source_code_url
+        ...(rest.demo_url !== "" ? { demo_url: rest.demo_url } : {}),
+        ...(rest.source_code_url !== ""
           ? { source_code_url: rest.source_code_url }
           : {}),
 
@@ -105,15 +104,15 @@ const Navs = () => {
       };
 
       // 6️⃣ Finally, insert the project row
-       await addProject({
+      await addProject({
         projectData: payload,
         thumbnailFile: image || null,
         galleryFiles: Array.isArray(gallery) ? gallery : [],
       });
     } catch (err) {
       console.error("Submission/upload error:", err);
-    }finally{
-      methods.reset()
+    } finally {
+      methods.reset();
     }
   };
 

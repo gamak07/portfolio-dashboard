@@ -50,7 +50,7 @@ export const addNewProjects = async (
       // Filter out any non-File (just in case)
       const filesOnly = galleryFiles.filter((f) => f instanceof File);
       galleryUrls = await Promise.all(
-        filesOnly.map((file) => uploadImages(file, "projects/gallery"))
+        filesOnly.map((file) => uploadImages(file, "projects/gallery")),
       );
     }
 
@@ -76,4 +76,19 @@ export const addNewProjects = async (
     console.error("Failed to add project:", err.message);
     throw err;
   }
+};
+
+export const projectDetails = async (id) => {
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("details error:", error.message);
+    throw error;
+  }
+
+  return data;
 };
