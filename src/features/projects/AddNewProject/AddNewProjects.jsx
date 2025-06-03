@@ -3,19 +3,24 @@ import Button from "../../../components/Button";
 import { FaTimes } from "react-icons/fa";
 import Navs from "./Navs";
 
-const AddNewProjects = ({ setAddNewProjectModal }) => {
+const AddNewProjects = ({ setAddNewProjectModal, initialData }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/10 backdrop-blur"></div>
-      <div className="relative mx-4 max-h-[90vh] w-full max-w-3/4 overflow-y-auto rounded-lg bg-white shadow-lg dark:bg-gray-800">
+      <div
+        className="relative mx-4 max-h-[90vh] w-full max-w-3/4 overflow-y-auto rounded-lg bg-white shadow-lg dark:bg-gray-800"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div>
           <div className="mb-6 flex justify-between p-4">
             <div className="leading-7">
               <h2 className="text-xl font-bold text-gray-900">
-                Create New Project
+                {initialData ? "Edit Project" : "Create New Project"}
               </h2>
               <p className="text-sm font-medium text-gray-500">
-                Add a new project to your portfolio
+                {initialData
+                  ? "Update project in your portfolio"
+                  : "Add a new project to your portfolio"}
               </p>
             </div>
             <Button onClick={() => setAddNewProjectModal(false)}>
@@ -25,7 +30,10 @@ const AddNewProjects = ({ setAddNewProjectModal }) => {
               />
             </Button>
           </div>
-          <Navs />
+          <Navs
+            initialData={initialData}
+            onClose={() => setAddNewProjectModal(false)}
+          />
         </div>
       </div>
     </div>

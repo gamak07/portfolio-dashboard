@@ -92,3 +92,55 @@ export const projectDetails = async (id) => {
 
   return data;
 };
+
+export const updateProject = async (
+  id,
+  projectData,
+  thumbnailFile,
+  galleryFiles = [],
+) => {
+  try {
+    // 1️⃣ Upload thumbnail if provided (otherwise keep existing one)
+    let thumbnailUrl = null;
+    if (thumbnailFile) {
+      thumbnailUrl = await uploadImages(thumbnailFile, "projects/thumbnails");
+    }
+
+    // 2️⃣ Upload any new gallery files; we’ll merge with existing URLs later
+    let galleryUrls = [];
+    if (Array.isArray(galleryFiles) && galleryFiles.length > 0) {
+      const filesOnly = galleryFiles.filter((f) => f instanceof File);
+      galleryUrls = await Promise.all(
+        filesOnly.map((file) => uploadImages(file, "projects/gallery")),
+      );
+    }
+
+    // 3️⃣ Build the updated row. If thumbnailUrl is truthy, override; else omit it.
+    //    If galleryUrls has something, we’ll send that array. You could also merge
+    //    them with existing URLs if you want (fetch existing first). For simplicity, here
+    //    we assume the form’s “gallery” field already includes ALL URLs (old + new).
+    const fullProjectData = {
+      ...projectData,
+      ...(thumbnailUrl ? { thumbnail_url: thumbnailUrl } : {}),
+      ...(galleryUrls.length ? { gallery: galleryUrls } : {}),
+    };
+
+    // 4️⃣ Call Supabase update
+    const { data, error } = await supabase
+      .from("projects")
+      .update(fullProjectData)
+      .eq("id", id)
+      .select() // return the updated row
+      .single();
+
+    if (error) {
+      console.error("Update error:", error.message);
+      throw error;
+    }
+
+    return data; // updated project row
+  } catch (err) {
+    console.error("Failed to update project:", err.message);
+    throw err;
+  }
+};
