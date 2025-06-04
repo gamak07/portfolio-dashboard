@@ -1,4 +1,4 @@
-import { data } from "react-router-dom";
+import { data, useAsyncValue } from "react-router-dom";
 import { supabase } from "./supabase";
 
 export const getProjects = async () => {
@@ -142,5 +142,16 @@ export const updateProject = async (
   } catch (err) {
     console.error("Failed to update project:", err.message);
     throw err;
+  }
+};
+
+export const deleteProject = async (id) => {
+  const { error } = await supabase
+    .from("projects")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("error message", error);
   }
 };

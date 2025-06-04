@@ -3,14 +3,25 @@ import { FaArchive, FaEdit, FaEye, FaShare, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import AddNewProjects from "./AddNewProject/AddNewProjects";
 import { createPortal } from "react-dom";
+import { useDeleteProject } from "./useDeleteProject";
 
 const ProjectMenuDropdown = ({ project }) => {
   const navigate = useNavigate();
+  const { delProject } = useDeleteProject();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const handleEditModal = (e) => {
     e.stopPropagation();
     setIsEditModalOpen(true);
+  };
+
+  const handleDeleteProject = (e, id) => {
+    e.stopPropagation();
+    const confirm = window.confirm(
+      "Are you sure you want to delete this project",
+    );
+    if (!confirm) return;
+    delProject({ id });
   };
 
   return (
@@ -34,7 +45,10 @@ const ProjectMenuDropdown = ({ project }) => {
         <div className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700">
           <FaArchive className="mr-2" /> Archive
         </div>
-        <div className="flex w-full items-center px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-800">
+        <div
+          className="flex w-full items-center px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-800"
+          onClick={(e) => handleDeleteProject(e, project.id)}
+        >
           <FaTrashAlt className="mr-2" /> Delete
         </div>
       </div>
