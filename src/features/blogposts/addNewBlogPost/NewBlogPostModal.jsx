@@ -3,7 +3,7 @@ import Button from "../../../components/Button";
 import { FaTimes } from "react-icons/fa";
 import NewBlogForm from "./NewBlogForm";
 
-const NewBlogPostModal = ({ onclose }) => {
+const NewBlogPostModal = ({ onClose }) => {
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center">
       <div className="absolute inset-0 bg-black/10 backdrop-blur"></div>
@@ -13,7 +13,7 @@ const NewBlogPostModal = ({ onclose }) => {
             <h1 className="text-2xl font-bold text-gray-800">
               Create New Blog Post
             </h1>
-            <Button onClick={onclose} className="cursor-pointer">
+            <Button onClick={onClose} className="cursor-pointer">
               <FaTimes className="text-sm font-medium text-gray-500 hover:text-gray-600" />
             </Button>
           </div>

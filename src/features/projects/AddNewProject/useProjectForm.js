@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { rootSchema } from "../features/projects/AddNewProject/schema";
-import { useAddNewProjects } from "../features/projects/useAddNewProjects";
+import { rootSchema } from "./schema";
+import { useAddNewProjects } from "../useAddNewProjects";
 
 export const useProjectForm = () => {
   const { isCreating, addProject } = useAddNewProjects();

@@ -2,7 +2,7 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { FaImage } from "react-icons/fa";
-import {useImageUpload} from '../../../hooks/useImageUpload'
+import {useImageUpload} from './useImageUpload'
 
 const MediaForm = () => {
   const {

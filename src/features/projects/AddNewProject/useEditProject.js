@@ -2,8 +2,8 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useUpdateProject } from "../features/projects/useUpdateProject";
-import { rootSchema } from "../features/projects/AddNewProject/schema";
+import { useUpdateProject } from "../useUpdateProject";
+import { rootSchema } from "./schema";
 
 export const useEditProject = (project) => {
   const { isPending: isEditing, editProject } = useUpdateProject();

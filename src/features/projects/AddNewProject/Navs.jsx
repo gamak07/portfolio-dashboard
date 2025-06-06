@@ -9,8 +9,8 @@ import TeamForm from "./TeamForm";
 import ActionButtons from "./ActionButtons";
 
 import { FormProvider } from "react-hook-form";
-import { useProjectForm } from "../../../hooks/useProjectForm";
-import { useEditProject } from "../../../hooks/useEditProject";
+import { useProjectForm } from "./useProjectForm";
+import { useEditProject } from "./useEditProject";
 
 
 const Navs = ({ initialData = {}, onClose = () => {} }) => {
