@@ -11,10 +11,12 @@ import Button from "../../components/Button";
 import StatusDropdown from "./StatusDropdown";
 import BlogTable from "./BlogTable";
 import BlogGrid from "./BlogGrid";
+import NewBlogPostModal from "./addNewBlogPost/NewBlogPostModal";
 
 const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeView, setActiveView] = useState("list");
+  const [showNewBlogModal, setShowNewBlogModal] = useState(false);
 
   const handleShowDropdown = () => {
     setShowDropdown((prev) => !prev);
@@ -23,11 +25,18 @@ const Header = () => {
   const handleViewType = (view) => {
     setActiveView(view);
   };
+
+  const handleNewBlogModal = () => {
+    setShowNewBlogModal((prev) => !prev);
+  };
   return (
     <>
       <div className="mb-6 flex flex-wrap items-center justify-between rounded-lg bg-white p-4 shadow-sm dark:bg-gray-800">
         <div className="mb-4 flex items-center space-x-4 sm:mb-0">
-          <div className="flex cursor-pointer items-center rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+          <div
+            className="flex cursor-pointer items-center rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            onClick={handleNewBlogModal}
+          >
             <FaPlus className="mr-2" /> New Post
           </div>
           <div className="relative" onClick={handleShowDropdown}>
@@ -65,6 +74,9 @@ const Header = () => {
       </div>
       {activeView === "list" && <BlogTable />}
       {activeView === "grid" && <BlogGrid />}
+      {showNewBlogModal && (
+        <NewBlogPostModal onClose={() => setShowNewBlogModal(false)} />
+      )}
     </>
   );
 };
