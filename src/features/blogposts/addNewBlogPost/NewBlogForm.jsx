@@ -23,12 +23,15 @@ const NewBlogForm = () => {
     handleAddTag,
     handleRemoveTag,
     onSubmit,
+    onError,
     tags,
     tagInputRef,
+    previewImage,
+    handleRemovePreview,
   } = useFormValidation();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
+    <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-4 py-4">
       {/* Title */}
       <div>
         <label className="text-base font-medium text-gray-700">Title</label>
@@ -107,17 +110,31 @@ const NewBlogForm = () => {
         <label className="text-base font-medium text-gray-700">
           Featured Image
         </label>
-        <label className="mt-1 flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-gray-200 hover:border-gray-600">
-          <FaImage size={24} className="mb-2 text-gray-600" />
-          <p className="text-xl font-medium text-gray-500">
-            Click to upload your image
-          </p>
-          <input
-            type="file"
-            {...register("featured_image_url")}
-            accept="image/*"
-            className="hidden"
-          />
+        <label className="relative mt-1 flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-gray-200 hover:border-gray-600">
+          {previewImage ? (
+            <>
+              <img src={previewImage} alt="preview" className="h-full w-full" />
+              <Button
+                className="absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-full bg-gray-200 text-sm font-medium text-white hover:bg-gray-300"
+                onClick={handleRemovePreview}
+              >
+                <FaTimes />
+              </Button>
+            </>
+          ) : (
+            <>
+              <FaImage size={24} className="mb-2 text-gray-600" />
+              <p className="text-xl font-medium text-gray-500">
+                Click to upload your image
+              </p>
+              <input
+                type="file"
+                {...register("featured_image_url")}
+                accept="image/*"
+                className="hidden"
+              />
+            </>
+          )}
         </label>
       </div>
 

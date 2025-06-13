@@ -1,4 +1,3 @@
-import { data, useAsyncValue } from "react-router-dom";
 import { supabase } from "./supabase";
 
 export const getProjects = async () => {

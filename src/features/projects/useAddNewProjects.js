@@ -7,9 +7,7 @@ export const useAddNewProjects = () => {
     mutationFn: ({ projectData, thumbnailFile, galleryFiles }) => {
       return addNewProjects(projectData, thumbnailFile, galleryFiles);
     },
-    onSuccess: (data) => {
-      console.log(data);
-
+    onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["projects"],
       });
