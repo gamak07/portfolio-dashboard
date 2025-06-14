@@ -23,7 +23,7 @@ export const formSchema = z
     meta_description: z.string().max(160, "Maximum 160 characters").optional(),
     tags: z.array(z.string().nonempty()).optional(),
     is_published: z.boolean().default(false),
-    published_at: z.string().optional(),
+    published_at: z.string().nullable().optional(),
   })
   .superRefine((data, ctx) => {
     if (data.is_published && !data.published_at) {

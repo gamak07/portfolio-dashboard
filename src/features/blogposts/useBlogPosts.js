@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { blogPosts } from "../../services/apiBlogPost";
+import { getBlogPosts } from "../../services/apiBlogPost";
 
 export const useBlogPosts = () => {
   const { data: getBlog, isLoading: isFetching } = useQuery({
-    queryFn: blogPosts,
+    queryFn: getBlogPosts,
     queryKey: ["blogs"],
   });
 

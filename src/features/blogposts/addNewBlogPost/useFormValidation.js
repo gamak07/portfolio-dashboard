@@ -20,15 +20,22 @@ export const useFormValidation = () => {
     resolver: zodResolver(formSchema),
     mode: "onChange",
     defaultValues: {
-      is_published: false,
-      tags: [],
+      title: "",
+      slug: "",
+      excerpt: "",
+      content: "",
       featured_image_url: undefined,
-      // slug: undefined,
+      tags: [],
+      meta_description: "",
+      is_published: false,
+      published_at: "",
     },
   });
 
   const imageFile = watch("featured_image_url");
   const isPublished = watch("is_published");
+
+  // display previewed image
 
   useEffect(() => {
     if (imageFile && imageFile.length > 0) {
@@ -42,6 +49,7 @@ export const useFormValidation = () => {
     }
   }, [imageFile]);
 
+  // remove previewed image
   const handleRemovePreview = () => {
     setPreviewImage(null);
     setValue("featured_image_url", undefined);
@@ -61,6 +69,7 @@ export const useFormValidation = () => {
   //   }
   // }, [title, slug, setValue]);
 
+  // handle adding tags to blog posts
   const handleAddTag = () => {
     const val = tagInputRef.current.value.trim();
     if (val && !tags.includes(val)) {
@@ -71,16 +80,20 @@ export const useFormValidation = () => {
     }
   };
 
+
+  // remove tag 
   const handleRemoveTag = (tag) => {
     const newTags = tags.filter((t) => t !== tag);
     setTags(newTags);
     setValue("tags", newTags);
   };
 
+  // catching validation errors
   const onError = (formErrors) => {
     console.log("Validation Errors:", formErrors);
   };
 
+  // submitting the data
   const onSubmit = async (data) => {
     if (!data) {
       console.error("No form data submitted");
@@ -130,5 +143,6 @@ export const useFormValidation = () => {
     tagInputRef,
     previewImage,
     handleRemovePreview,
+    isCreating
   };
 };

@@ -26,7 +26,7 @@ export const uploadImage = async (file) => {
 };
 
 // read and get all blog posts
-export const blogposts = async () => {
+export const getBlogPosts = async () => {
   const { data, error } = await supabase.from("blog_posts").select("*");
   if (error) {
     console.error(error, "error message");
@@ -37,11 +37,11 @@ export const blogposts = async () => {
 
 // create a new blog post
 export const createBlogPost = async (blogData, blogImage) => {
-  let blogUrl = "";
+  let blogUrl = null;
   if (blogImage) {
     blogUrl = await uploadImage(blogImage);
   }
-  if (!blogUrl) console.error("error uploading image to supabase");
+  // if (!blogUrl) console.error("error uploading image to supabase");
 
   const fullBlogData = {
     ...blogData,
@@ -54,8 +54,35 @@ export const createBlogPost = async (blogData, blogImage) => {
     .single();
 
   if (error) {
-    console.error(error, "error message");
+    console.error(error.message, "error message");
   }
 
   return data;
+};
+
+// edit blog post
+
+export const editBlogPost = async (id, blogData, blogImage) => {
+  let blogUrl = blogData.featured_image_url;
+  if (blogImage) {
+    blogUrl = await uploadImage(blogImage);
+  }
+  // if (!blogUrl) console.error("error uploading image to supabase");
+
+  const updatedData = {
+    ...blogData,
+    featured_image_url:blogUrl
+  }
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .update(updatedData)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error.message);
+  }
+
+  return data
 };

@@ -13,22 +13,57 @@ import {
 } from "react-icons/fa";
 import ActionButtons from "./ActionButtons";
 import { useFormValidation } from "./useFormValidation";
+import { useEditBlog } from "./useEditBlog";
 
-const NewBlogForm = () => {
+const NewBlogForm = ({ initialData }) => {
+  const isEdit = Boolean(initialData && initialData.id);
   const {
-    register,
-    handleSubmit,
-    errors,
-    isPublished,
-    handleAddTag,
-    handleRemoveTag,
-    onSubmit,
-    onError,
-    tags,
-    tagInputRef,
-    previewImage,
-    handleRemovePreview,
+    isEditing,
+    register: createRegister,
+    handleSubmit: createHandleSubmit,
+    errors: createErrors,
+    isPublished: createIsPublished,
+    handleAddTag: createHandleAddTag,
+    handleRemoveTag: createHandleRemoveTag,
+    onSubmit: createOnSubmit,
+    onError: createOnError,
+    tags: createTags,
+    tagInputRef: createTagInputRef,
+    previewImage: createPreviewImage,
+    handleRemovePreview: createHandleRemovePreview,
   } = useFormValidation();
+
+  const {
+    isCreating,
+    register: editRegister,
+    handleSubmit: editHandleSubmit,
+    errors: editErrors,
+    isPublished: editIsPublished,
+    handleAddTag: editHandleAddTag,
+    handleRemoveTag: editHandleRemoveTag,
+    onSubmit: editOnSubmit,
+    onError: editOnError,
+    tags: editTags,
+    tagInputRef: editTagInputRef,
+    previewImage: editPreviewImage,
+    handleRemovePreview: editHandleRemovePreview,
+  } = useEditBlog(initialData);
+
+  const register = isEdit ? editRegister : createRegister;
+  const handleSubmit = isEdit ? editHandleSubmit : createHandleSubmit;
+  const errors = isEdit ? editErrors : createErrors;
+  const isPublished = isEdit ? editIsPublished : createIsPublished;
+  const handleAddTag = isEdit ? editHandleAddTag : createHandleAddTag;
+  const handleRemoveTag = isEdit ? editHandleRemoveTag : createHandleRemoveTag;
+  const onSubmit = isEdit ? editOnSubmit : createOnSubmit;
+  const onError = isEdit ? editOnError : createOnError;
+  const tags = isEdit ? editTags : createTags;
+  const tagInputRef = isEdit ? editTagInputRef : createTagInputRef;
+  const previewImage = isEdit ? editPreviewImage : createPreviewImage;
+  const handleRemovePreview = isEdit
+    ? editHandleRemovePreview
+    : createHandleRemovePreview;
+  const isLoading = isEdit ? isEditing : isCreating;
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-4 py-4">
@@ -223,7 +258,7 @@ const NewBlogForm = () => {
       )}
 
       {/* Submit Buttons */}
-      <ActionButtons />
+      <ActionButtons isLoading={isLoading} initialData={initialData} />
     </form>
   );
 };
