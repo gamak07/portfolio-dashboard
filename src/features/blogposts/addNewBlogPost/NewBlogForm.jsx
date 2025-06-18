@@ -14,6 +14,9 @@ import {
 import ActionButtons from "./ActionButtons";
 import { useFormValidation } from "./useFormValidation";
 import { useEditBlog } from "./useEditBlog";
+import { useTextEditor } from "../../../hooks/useTextEditor";
+import { EditorContent } from "@tiptap/react";
+import { useForm } from "react-hook-form";
 
 const NewBlogForm = ({ initialData }) => {
   const isEdit = Boolean(initialData && initialData.id);
@@ -31,6 +34,7 @@ const NewBlogForm = ({ initialData }) => {
     tagInputRef: createTagInputRef,
     previewImage: createPreviewImage,
     handleRemovePreview: createHandleRemovePreview,
+    setValue: createSetValue,
   } = useFormValidation();
 
   const {
@@ -47,6 +51,7 @@ const NewBlogForm = ({ initialData }) => {
     tagInputRef: editTagInputRef,
     previewImage: editPreviewImage,
     handleRemovePreview: editHandleRemovePreview,
+    setValue: editSetValue,
   } = useEditBlog(initialData);
 
   const register = isEdit ? editRegister : createRegister;
@@ -64,6 +69,14 @@ const NewBlogForm = ({ initialData }) => {
     ? editHandleRemovePreview
     : createHandleRemovePreview;
   const isLoading = isEdit ? isEditing : isCreating;
+  const setValue = isEdit ? editSetValue : createSetValue;
+
+  const defaultContent = initialData?.content || "";
+  const editor = useTextEditor(defaultContent, (html) => {
+    setValue("content", html); // sync with React Hook Form
+  });
+
+  if (!editor) return null;
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-4 py-4">
@@ -109,31 +122,60 @@ const NewBlogForm = ({ initialData }) => {
         <label className="text-base font-medium text-gray-700">Content</label>
         <div className="mt-1 rounded-md border border-gray-200">
           <div className="space-x-2 border-b bg-gray-50 p-1">
-            <Button className="p-1 hover:bg-gray-300">
+            <Button
+              type="button"
+              className={`cursor-pointer p-1 ${editor.isActive("bold") ? "bg-gray-300" : ""}`}
+              onClick={() => editor.chain().focus().toggleBold().run()}
+            >
               <FaBold size={15} className="text-gray-600" />
             </Button>
-            <Button className="p-1 hover:bg-gray-300">
+            <Button
+              type="button"
+              className={`cursor-pointer p-1 ${editor.isActive("italic") ? "bg-gray-300" : ""}`}
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+            >
               <FaItalic size={15} className="text-gray-600" />
             </Button>
-            <Button className="p-1 hover:bg-gray-300">
+            <Button
+              type="button"
+              className={`cursor-pointer p-1 ${editor.isActive("underline") ? "bg-gray-300" : ""}`}
+              onClick={() => editor.chain().focus().toggleUnderline().run()}
+            >
               <FaUnderline size={15} className="text-gray-600" />
             </Button>
-            <Button className="p-1 hover:bg-gray-300">
+            <Button
+              type="button"
+              className={`cursor-pointer p-1 ${editor.isActive("bulletList") ? "bg-gray-300" : ""}`}
+              onClick={() => editor.chain().focus().toggleBulletList().run()}
+            >
               <FaListUl size={15} className="text-gray-600" />
             </Button>
-            <Button className="p-1 hover:bg-gray-300">
+            <Button
+              type="button"
+              className={`cursor-pointer p-1 ${editor.isActive("orderedList") ? "bg-gray-300" : ""}`}
+              onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            >
               <FaListOl size={15} className="text-gray-600" />
             </Button>
-            <Button className="p-1 hover:bg-gray-300">
+            <Button
+              type="button"
+              className={`cursor-pointer p-1 ${editor.isActive("link") ? "bg-gray-300" : ""}`}
+              onClick={() => {
+                const url = prompt("Enter the url");
+                if (url) {
+                  editor
+                    .chain()
+                    .focus()
+                    .extendMarkRange()
+                    .setLink({ href: url })
+                    .run();
+                }
+              }}
+            >
               <FaLink size={15} className="text-gray-600" />
             </Button>
           </div>
-          <textarea
-            rows="6"
-            {...register("content")}
-            className="w-full px-3 py-2 outline-0"
-            placeholder="Write your content here..."
-          ></textarea>
+          <EditorContent editor={editor} />
         </div>
         {errors.content && (
           <p className="text-sm text-red-500">{errors.content.message}</p>

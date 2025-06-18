@@ -125,6 +125,7 @@ export const useEditBlog = (blog) => {
     previewImage,
     handleRemovePreview,
     isEditing,
+    setValue
     // you can also return watch("is_published"), tags logic, etc.
   };
 };

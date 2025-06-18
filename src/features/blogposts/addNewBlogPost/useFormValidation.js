@@ -143,6 +143,7 @@ export const useFormValidation = () => {
     tagInputRef,
     previewImage,
     handleRemovePreview,
-    isCreating
+    isCreating,
+    setValue
   };
 };
