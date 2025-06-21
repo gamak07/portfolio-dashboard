@@ -39,8 +39,9 @@ const BlogTableList = ({ blogs, isFetching }) => {
             </td>
             <td className="px-4 py-4">{blog.views}</td>
             <td className="px-4 py-4">{blog.estimated_read_time}</td>
-            <td className="px-4 py-4 text-sm">{blog.published_at}</td>
-            <td className="px-4 py-4">{formatDate(blog.updated_at)}</td>
+            <td className="px-4 py-4 text-sm">{formatDate(blog.created_at)}</td>
+            <td className="px-4 py-4 text-sm">{formatDate(blog.published_at)}</td>
+            <td className="px-4 py-4 text-sm">{formatDate(blog.updated_at)}</td>
             <td className="px-4 py-4">
               <div className="flex space-x-2">
                 <Button className="cursor-pointer rounded-full p-1 hover:bg-gray-100">

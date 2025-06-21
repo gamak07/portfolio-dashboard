@@ -3,6 +3,8 @@ import { useUpdateBlogPost } from "../useUpdateBlogPost";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formSchema } from "./schema";
 import { useEffect, useRef, useState } from "react";
+import { generateSlug } from "../../../helpers/generateSlug";
+import { useTextEditor } from "../../../hooks/useTextEditor";
 
 export const useEditBlog = (blog) => {
   const { editBlog, isEditing } = useUpdateBlogPost();
@@ -28,13 +30,17 @@ export const useEditBlog = (blog) => {
       tags: [],
       meta_description: "",
       is_published: false,
-      published_at: "",
+      published_at: null,
     },
   });
 
   // Preview URL state
   const [previewImage, setPreviewImage] = useState(null);
   const isPublished = watch("is_published");
+
+  const { editor } = useTextEditor(blog?.content || "", (html) => {
+    setValue("content", html);
+  });
 
   // 1) If initialData arrives, reset form fields and set preview
   useEffect(() => {
@@ -44,7 +50,7 @@ export const useEditBlog = (blog) => {
         featured_image_url: undefined, // file input can't be set programmatically
         tags: blog.tags || [],
       });
-      setTags(blog.tags || [])
+      setTags(blog.tags || []);
       if (blog.featured_image_url) {
         setPreviewImage(blog.featured_image_url);
       }
@@ -96,10 +102,20 @@ export const useEditBlog = (blog) => {
     // data.featured_image_url is either undefined or a single File (thanks to your Zod transform)
     const file = data.featured_image_url || null;
 
+    const initialSlug = data?.slug || "";
+    const initialTitle = data?.title || "";
+    const incomingSlug = data.slug.trim();
+
+    const hasUserSetSlug = incomingSlug !== initialSlug;
+
+    const finalSlug = hasUserSetSlug
+      ? generateSlug(incomingSlug)
+      : generateSlug(data.title);
+
     // build payload object
     const payload = {
       title: data.title,
-      slug: data.slug,
+      slug: finalSlug,
       excerpt: data.excerpt,
       content: data.content,
       meta_description: data.meta_description,
@@ -125,7 +141,7 @@ export const useEditBlog = (blog) => {
     previewImage,
     handleRemovePreview,
     isEditing,
-    setValue
+    editor,
     // you can also return watch("is_published"), tags logic, etc.
   };
 };

@@ -35,6 +35,7 @@ const NewBlogForm = ({ initialData }) => {
     previewImage: createPreviewImage,
     handleRemovePreview: createHandleRemovePreview,
     setValue: createSetValue,
+    editor: createEditor,
   } = useFormValidation();
 
   const {
@@ -52,6 +53,7 @@ const NewBlogForm = ({ initialData }) => {
     previewImage: editPreviewImage,
     handleRemovePreview: editHandleRemovePreview,
     setValue: editSetValue,
+    editor: editEditor,
   } = useEditBlog(initialData);
 
   const register = isEdit ? editRegister : createRegister;
@@ -69,12 +71,7 @@ const NewBlogForm = ({ initialData }) => {
     ? editHandleRemovePreview
     : createHandleRemovePreview;
   const isLoading = isEdit ? isEditing : isCreating;
-  const setValue = isEdit ? editSetValue : createSetValue;
-
-  const defaultContent = initialData?.content || "";
-  const editor = useTextEditor(defaultContent, (html) => {
-    setValue("content", html); // sync with React Hook Form
-  });
+  const editor = isEdit ? editEditor : createEditor;
 
   if (!editor) return null;
 

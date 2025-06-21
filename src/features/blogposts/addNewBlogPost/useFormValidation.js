@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { formSchema } from "./schema";
 import { useEffect, useRef, useState } from "react";
 import { useAddBlogPost } from "../useAddBlogPost";
+import { generateSlug } from "../../../helpers/generateSlug";
+import { useTextEditor } from "../../../hooks/useTextEditor";
 
 export const useFormValidation = () => {
   const { addBlog, isCreating } = useAddBlogPost();
@@ -28,12 +30,15 @@ export const useFormValidation = () => {
       tags: [],
       meta_description: "",
       is_published: false,
-      published_at: "",
+      published_at: null,
     },
   });
 
   const imageFile = watch("featured_image_url");
   const isPublished = watch("is_published");
+  const { editor } = useTextEditor("", (html) => {
+    setValue("content", html);
+  });
 
   // display previewed image
 
@@ -54,20 +59,6 @@ export const useFormValidation = () => {
     setPreviewImage(null);
     setValue("featured_image_url", undefined);
   };
-  // const title = watch("title");
-  // const slug = watch("slug");
-
-  // Auto-generate slug from title if empty
-  // useEffect(() => {
-  //   if (!slug && title) {
-  //     const generatedSlug = title
-  //       .toLowerCase()
-  //       .trim()
-  //       .replace(/[^\w\s-]/g, "")
-  //       .replace(/\s+/g, "-");
-  //     setValue("slug", generatedSlug);
-  //   }
-  // }, [title, slug, setValue]);
 
   // handle adding tags to blog posts
   const handleAddTag = () => {
@@ -80,8 +71,7 @@ export const useFormValidation = () => {
     }
   };
 
-
-  // remove tag 
+  // remove tag
   const handleRemoveTag = (tag) => {
     const newTags = tags.filter((t) => t !== tag);
     setTags(newTags);
@@ -102,21 +92,24 @@ export const useFormValidation = () => {
     try {
       console.log("Form Data:", data);
       const { featured_image_url, ...rest } = data;
+      const incoming = rest.slug ? rest.slug.trim() : "";
+      const finalSlug = incoming.length
+        ? generateSlug(incoming)
+        : generateSlug(rest.title);
 
-      if (!rest.slug) {
-        rest.slug = rest.title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)+/g, "");
+      let pubDate = rest.published_at;
+      if (!pubDate || String(pubDate).trim() === "") {
+        pubDate = null;
       }
       const payload = {
-        title: rest.title,
-        slug: rest.slug,
-        excerpt: rest.excerpt,
-        content: rest.content,
-        meta_description: rest.meta_description,
+        title: rest.title.trim(),
+        slug: finalSlug,
+        excerpt: rest.excerpt.trim(),
+        content: rest.content.trim(),
+        meta_description: rest.meta_description.trim(),
         tags: rest.tags,
         is_published: rest.is_published,
+        published_at: pubDate,
       };
 
       await addBlog({
@@ -126,8 +119,10 @@ export const useFormValidation = () => {
     } catch (err) {
       console.log("submission error", err);
     } finally {
-      reset();
-      setTags([]);
+      reset(); // clear all fields
+      setTags([]); // clear tags
+      setValue("content", ""); // clear react hook form content
+      editor.commands.setContent(""); // clear tip tap content
     }
   };
   return {
@@ -144,6 +139,6 @@ export const useFormValidation = () => {
     previewImage,
     handleRemovePreview,
     isCreating,
-    setValue
+    editor,
   };
 };

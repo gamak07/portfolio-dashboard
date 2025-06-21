@@ -18,6 +18,7 @@ const BlogTable = () => {
             <th className="px-4 py-3 text-left">Views</th>
             <th className="px-4 py-3 text-left">Estimated Read Time</th>
             <th className="px-4 py-3 text-left">Created</th>
+            <th className="px-4 py-3 text-left">Published</th>
             <th className="px-4 py-3 text-left">Updated</th>
             <th className="px-4 py-3 text-left">Actions</th>
           </tr>
