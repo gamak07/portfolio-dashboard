@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { FaEllipsisH, FaEye, FaStar } from "react-icons/fa";
-import ProjectMenuDropdown from "./ProjectMenuDropdown";
 import { useProjects } from "./useProjects";
 import ProjectsListItems from "./ProjectsListItems";
 import Spinner from "../../components/Spinner";
@@ -15,7 +13,7 @@ const ProjectsList = () => {
   if (isLoading) return <Spinner />;
   return (
     <div className="flex flex-col gap-6">
-      {data.map((project) => (
+      {data?.map((project) => (
         <ProjectsListItems
           project={project}
           isLoading={isLoading}

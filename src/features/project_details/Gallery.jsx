@@ -3,6 +3,7 @@ import Button from "../../components/Button";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useProjectDetails } from "./useProjectDetails";
 import Spinner from "../../components/Spinner";
+import { getImageUrl } from "../../helpers/getImageUrl";
 
 const Gallery = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -26,7 +27,7 @@ const Gallery = () => {
       <h1 className="mb-4 text-2xl font-bold text-gray-800">Gallery</h1>
       <div className="w-full">
         <div className="relative">
-          <img src={gallery[currentIndex]} alt='preview' className="w-full h-100 rounded-md" />
+          <img src={getImageUrl(gallery[currentIndex])} alt='preview' className="w-full h-100 rounded-md" />
           {/* Navigation Buttons */}
           <Button
             onClick={goToPrev}
@@ -47,7 +48,7 @@ const Gallery = () => {
           {gallery.map((img, index) => (
             <img
               key={index}
-              src={img}
+              src={getImageUrl(img)}
               onClick={() => selectImage(index)}
               className={`h-20 w-20 cursor-pointer rounded-md border-2 object-cover ${
                 index === currentIndex

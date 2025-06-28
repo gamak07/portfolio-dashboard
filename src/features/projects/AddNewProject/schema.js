@@ -3,14 +3,14 @@ import { z } from "zod";
 
 const MAX_FILE_SIZE = 1500 * 1024; // 1.5 MB
 
-// 1) A refinement that ensures a File is ≤ 1.5 MB:
+// File refinement
 const fileRefinement = z
   .instanceof(File)
   .refine((file) => file.size <= MAX_FILE_SIZE, {
     message: "Each file must be ≤ 1.5 MB",
   });
 
-// 2) Info section
+// 1) Info section
 export const infoSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   slug: z.string().optional(),
@@ -22,17 +22,29 @@ export const infoSchema = z.object({
   ),
 });
 
-// 3) Media section: allow either a raw File (pre-upload) or a URL string (post-upload)
+// 2) Media section: accept Files or any non-empty string (URL or relative path)
 export const mediaSchema = z.object({
-  image: z.union([fileRefinement, z.string().url("Invalid URL")]).optional(),
-  gallery: z
-    .union([z.array(fileRefinement), z.array(z.string().url("Invalid URL"))])
+  image: z
+    .union([
+      fileRefinement,
+      z.string().min(1, { message: "Invalid image path or URL" })
+    ])
     .optional(),
+
+  gallery: z
+    .array(
+      z.union([
+        fileRefinement,
+        z.string().min(1, { message: "Invalid gallery path or URL" })
+      ])
+    )
+    .optional(),
+
   demo_url: z.string().url("Invalid URL").optional().or(z.literal("")),
   source_code_url: z.string().url("Invalid URL").optional().or(z.literal("")),
 });
 
-// 4) Tech section
+// 3) Tech section
 export const techSchema = z.object({
   tech_stack: z
     .array(z.string().min(1, "Tech cannot be empty"))
@@ -42,21 +54,21 @@ export const techSchema = z.object({
   database: z.string().optional().or(z.literal("")),
 });
 
-// 5) Timeline section
+// 4) Timeline section
 export const timelineBase = z.object({
   start_date: z.string().optional(),
   end_date: z.string().optional(),
   duration: z.string().optional(),
 });
 
-// 6) Features section
+// 5) Features section
 export const featuresSchema = z.object({
   features: z.string().optional(),
   challenges: z.string().optional(),
   learnings: z.string().optional(),
 });
 
-// 7) Team section
+// 6) Team section
 export const teamSchema = z.object({
   tags: z.array(z.string().min(1, "Tag cannot be empty")).optional(),
   category: z
@@ -74,7 +86,7 @@ export const teamSchema = z.object({
     .optional(),
 });
 
-// 8) Combine everything into rootSchema and enforce date ordering
+// 7) Combine into rootSchema and enforce date order
 export const rootSchema = infoSchema
   .merge(mediaSchema)
   .merge(techSchema)

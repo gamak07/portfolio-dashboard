@@ -9,8 +9,11 @@ import {
 } from "react-icons/fa";
 import { formatDate } from "../../helpers/formateDate";
 import Button from "../../components/Button";
+import { getImageUrl } from "../../helpers/getImageUrl";
 
 const Preview = () => {
+  // Fetch project details using custom hook
+  // This hook should return the project data and a loading state
   const { project, isLoading } = useProjectDetails();
   if (isLoading) return <Spinner />;
   const {
@@ -63,6 +66,7 @@ const Preview = () => {
                 className="flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
                 href={demo_url}
                 target="_blank"
+                rel="noreferrer"
               >
                 <FaExternalLinkAlt /> View Demo
               </a>
@@ -72,6 +76,7 @@ const Preview = () => {
                 className="flex items-center gap-2 rounded-md border border-gray-200 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-100"
                 href={source_code_url}
                 target="_blank"
+                rel="noreferrer"
               >
                 <FaGithub /> Source Code
               </a>
@@ -80,7 +85,7 @@ const Preview = () => {
         </div>
         <div className="">
           <img
-            src={thumbnail_url}
+            src={getImageUrl(thumbnail_url)}
             alt={title}
             className="h-80 w-full rounded-md"
           />

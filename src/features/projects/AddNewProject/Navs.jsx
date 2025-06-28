@@ -13,8 +13,9 @@ import { useProjectForm } from "./useProjectForm";
 import { useEditProject } from "./useEditProject";
 
 
-const Navs = ({ initialData = {}, onClose = () => {} }) => {
+const Navs = ({ initialData, onClose = () => {} }) => {
   const [activeNav, setActiveNav] = useState("info");
+  
 
   const isEdit = Boolean(initialData && initialData.id);
 

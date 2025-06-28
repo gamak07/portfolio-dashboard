@@ -28,7 +28,7 @@ const uploadImages = async (file, folder = "") => {
     .from("project-images")
     .getPublicUrl(pathInBucket);
 
-  return urlData.publicUrl;
+  return { path: pathInBucket, publicUrl: urlData.publicUrl };
 };
 
 export const addNewProjects = async (
@@ -38,25 +38,22 @@ export const addNewProjects = async (
 ) => {
   try {
     // upload thumbnail
-    let thumbnailUrl = null;
-    if (thumbnailFile) {
-      thumbnailUrl = await uploadImages(thumbnailFile, "projects/thumbnails");
-    }
+    const thumbnailUpload = thumbnailFile
+      ? await uploadImages(thumbnailFile, "projects/thumbnails")
+      : null;
 
-    // 2️⃣ Only upload gallery if array has File objects
-    let galleryUrls = [];
-    if (Array.isArray(galleryFiles) && galleryFiles.length > 0) {
-      // Filter out any non-File (just in case)
-      const filesOnly = galleryFiles.filter((f) => f instanceof File);
-      galleryUrls = await Promise.all(
-        filesOnly.map((file) => uploadImages(file, "projects/gallery")),
-      );
-    }
+    const galleryUploads = galleryFiles.length
+      ? await Promise.all(
+          galleryFiles
+            .filter((f) => f instanceof File)
+            .map((file) => uploadImages(file, "projects/gallery")),
+        )
+      : [];
 
     const fullProjectData = {
       ...projectData,
-      thumbnail_url: thumbnailUrl,
-      gallery: galleryUrls, // text[] in Supabase
+      thumbnail_url: thumbnailUpload?.path ?? null,
+      gallery: galleryUploads?.map((img) => img.path), // text[] in Supabase
     };
 
     const { data, error } = await supabase
@@ -99,37 +96,74 @@ export const updateProject = async (
   galleryFiles = [],
 ) => {
   try {
-    // 1️⃣ Upload thumbnail if provided (otherwise keep existing one)
-    let thumbnailUrl = null;
+    const { data: existingProject, error: fetchError } = await supabase
+      .from("projects")
+      .select("thumbnail_url, gallery")
+      .eq("id", id)
+      .single();
+
+    if (fetchError) {
+      console.error("Fetch error:", fetchError.message);
+      throw fetchError;
+    }
+
+    // Upload new thumbnail if provided
+    let thumbnailPath = existingProject.thumbnail_url;
     if (thumbnailFile) {
-      thumbnailUrl = await uploadImages(thumbnailFile, "projects/thumbnails");
+      const uploaded = await uploadImages(thumbnailFile, "projects/thumbnails");
+      thumbnailPath = uploaded.path;
+
+      // Delete old thumbnail
+      if (existingProject.thumbnail_url) {
+        await supabase.storage
+          .from("project-images")
+          .remove([existingProject.thumbnail_url]);
+      }
     }
 
-    // 2️⃣ Upload any new gallery files; we’ll merge with existing URLs later
-    let galleryUrls = [];
-    if (Array.isArray(galleryFiles) && galleryFiles.length > 0) {
-      const filesOnly = galleryFiles.filter((f) => f instanceof File);
-      galleryUrls = await Promise.all(
-        filesOnly.map((file) => uploadImages(file, "projects/gallery")),
-      );
+    // Upload new gallery files
+    const filesOnly = galleryFiles.filter((f) => f instanceof File);
+    const newGalleryUploads = await Promise.all(
+      filesOnly.map((file) => uploadImages(file, "projects/gallery"))
+    );
+    const newGalleryPaths = newGalleryUploads.map((img) => img.path);
+
+    // Determine which existing gallery images to remove
+    const oldGallery = Array.isArray(existingProject.gallery)
+      ? existingProject.gallery
+      : [];
+
+    const removedGalleryImages = oldGallery.filter(
+      (oldPath) => !(projectData.gallery || []).includes(oldPath)
+    );
+
+    if (removedGalleryImages.length > 0) {
+      const { error: deleteError } = await supabase.storage
+        .from("project-images")
+        .remove(removedGalleryImages);
+
+      if (deleteError) {
+        console.error("Error deleting old gallery images:", deleteError.message);
+        throw deleteError;
+      }
     }
 
-    // 3️⃣ Build the updated row. If thumbnailUrl is truthy, override; else omit it.
-    //    If galleryUrls has something, we’ll send that array. You could also merge
-    //    them with existing URLs if you want (fetch existing first). For simplicity, here
-    //    we assume the form’s “gallery” field already includes ALL URLs (old + new).
+    const finalGallery = [
+      ...(projectData.gallery?.filter((g) => typeof g === "string") || []),
+      ...newGalleryPaths,
+    ];
+
     const fullProjectData = {
       ...projectData,
-      ...(thumbnailUrl ? { thumbnail_url: thumbnailUrl } : {}),
-      ...(galleryUrls.length ? { gallery: galleryUrls } : {}),
+      thumbnail_url: thumbnailPath,
+      gallery: finalGallery,
     };
 
-    // 4️⃣ Call Supabase update
     const { data, error } = await supabase
       .from("projects")
       .update(fullProjectData)
       .eq("id", id)
-      .select() // return the updated row
+      .select()
       .single();
 
     if (error) {
@@ -137,20 +171,42 @@ export const updateProject = async (
       throw error;
     }
 
-    return data; // updated project row
+    return data;
   } catch (err) {
     console.error("Failed to update project:", err.message);
     throw err;
   }
 };
 
+
 export const deleteProject = async (id) => {
-  const { error } = await supabase
+  const { data: record, error: fetchError } = await supabase
+    .from("projects")
+    .select("thumbnail_url, gallery")
+    .eq("id", id)
+    .single();
+
+  if (fetchError) {
+    console.error("error fetching image urls", fetchError);
+  }
+  const pathsToDelete = [];
+  if (record.thumbnail_url) pathsToDelete.push(record.thumbnail_url);
+  if (Array.isArray(record.gallery)) pathsToDelete.push(...record.gallery);
+
+  if (pathsToDelete.length > 0) {
+    const { error: storageError } = await supabase.storage
+      .from("project-images")
+      .remove(pathsToDelete);
+    if (storageError) {
+      console.error("error deleting image from bucket", storageError);
+      return;
+    }
+  }
+  const { error: deleteError } = await supabase
     .from("projects")
     .delete()
     .eq("id", id);
-
-  if (error) {
-    console.error("error message", error);
+  if (deleteError) {
+    console.error("error deleting row", deleteError);
   }
 };

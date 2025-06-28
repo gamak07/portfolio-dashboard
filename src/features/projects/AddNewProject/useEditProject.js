@@ -138,12 +138,22 @@ export const useEditProject = (project) => {
           : {}),
       };
 
+      const existingGalleryPaths = gallery.filter(
+        (item) => typeof item === "string",
+      );
+      const newGalleryFiles = gallery.filter((item) => item instanceof File);
+
       await editProject({
         id: project.id,
-        projectData: payload,
-        thumbnailFile: image || null,
-        galleryFiles: Array.isArray(gallery) ? gallery : [],
+        projectData: {
+          ...payload,
+          gallery: existingGalleryPaths,
+        },
+        // only pass a real File to upload; leave the string path alone
+        thumbnailFile: image instanceof File ? image : null,
+        galleryFiles: newGalleryFiles, // already only Files
       });
+
       reset(); // clear or leave as-is if you want to keep values
     } catch (err) {
       console.error("Update error:", err);

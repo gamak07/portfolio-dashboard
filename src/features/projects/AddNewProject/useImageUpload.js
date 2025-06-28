@@ -1,6 +1,7 @@
 // hooks/useImageUpload.js
 import { useFormContext } from "react-hook-form";
 import { useState, useEffect } from "react";
+import { getImageUrl } from "../../../helpers/getImageUrl";
 
 export const useImageUpload = () => {
   const { watch, setValue } = useFormContext();
@@ -10,8 +11,8 @@ export const useImageUpload = () => {
   const [galleryPreviews, setGalleryPreviews] = useState([]);
 
   // watch the raw File objects in form
-  const imageFile = watch("image");       // either File or undefined
-  const galleryFiles = watch("gallery");  // either File[] or []
+  const imageFile = watch("image"); // either File or undefined
+  const galleryFiles = watch("gallery"); // either File[] or []
 
   // whenever a new cover‐File is set, create a dataURL for preview
   useEffect(() => {
@@ -19,6 +20,8 @@ export const useImageUpload = () => {
       const reader = new FileReader();
       reader.onloadend = () => setCoverPreview(reader.result);
       reader.readAsDataURL(imageFile);
+    } else if (typeof imageFile === "string") {
+      setCoverPreview(getImageUrl(imageFile)); // in case it's a URL string
     } else {
       setCoverPreview("");
     }
@@ -27,16 +30,22 @@ export const useImageUpload = () => {
   // whenever galleryFiles (array of Files) changes, generate array of dataURLs
   useEffect(() => {
     if (Array.isArray(galleryFiles) && galleryFiles.length > 0) {
-      Promise.all(
-        galleryFiles.map(
-          (file) =>
-            new Promise((resolve) => {
-              const reader = new FileReader();
-              reader.onloadend = () => resolve(reader.result);
-              reader.readAsDataURL(file);
-            })
-        )
-      ).then((urls) => setGalleryPreviews(urls));
+      const previews = galleryFiles.map((file) => {
+        if (file instanceof File) {
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(file);
+          });
+        } else if (typeof file === "string") {
+          return Promise.resolve(getImageUrl(file)); // ✅ convert to full URL
+        }
+        return null;
+      });
+
+      Promise.all(previews).then((urls) =>
+        setGalleryPreviews(urls.filter(Boolean)),
+      );
     } else {
       setGalleryPreviews([]);
     }
@@ -51,9 +60,14 @@ export const useImageUpload = () => {
 
   // Handler: on multiple select, store File[] in form
   const handleGallerySelect = (e) => {
-    const filesArr = Array.from(e.target.files || []);
-    if (filesArr.length === 0) return;
-    setValue("gallery", filesArr, { shouldValidate: true });
+    const newFiles = Array.from(e.target.files || []);
+    if (newFiles.length === 0) return;
+
+    const existingFiles = watch("gallery") || [];
+
+    const mergedFiles = [...existingFiles, ...newFiles];
+
+    setValue("gallery", mergedFiles, { shouldValidate: true });
   };
 
   return {

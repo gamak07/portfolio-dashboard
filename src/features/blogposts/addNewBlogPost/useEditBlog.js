@@ -103,7 +103,6 @@ export const useEditBlog = (blog) => {
     const file = data.featured_image_url || null;
 
     const initialSlug = data?.slug || "";
-    const initialTitle = data?.title || "";
     const incomingSlug = data.slug.trim();
 
     const hasUserSetSlug = incomingSlug !== initialSlug;

@@ -2,6 +2,7 @@ import React from "react";
 import { formatDate } from "../../helpers/formateDate";
 import { FaEllipsisH, FaEye, FaStar } from "react-icons/fa";
 import ProjectMenuDropdown from "./ProjectMenuDropdown";
+import { getImageUrl } from "../../helpers/getImageUrl";
 
 const ProjectsListItems = ({
   project,
@@ -30,7 +31,7 @@ const ProjectsListItems = ({
     >
       <div className="relative w-1/3">
         <img
-          src={thumbnail_url}
+          src={getImageUrl(thumbnail_url)}
           alt={title}
           className="h-48 w-full object-cover object-top"
         />
