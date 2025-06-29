@@ -65,7 +65,7 @@ const ProjectsGrid = () => {
                 {project.description}
               </p>
               <div className="mb-3 flex flex-wrap gap-1">
-                {project?.technologies?.map((tech, i) => (
+                {project?.tech_stack?.map((tech, i) => (
                   <span
                     className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-800 dark:bg-gray-600 dark:text-white"
                     key={i}
@@ -78,10 +78,10 @@ const ProjectsGrid = () => {
               <div className="mt-2 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                 <div className="flex items-center">
                   <FaEye className="mr-1" />
-                  <span>{project.view}</span>
+                  <span>{project.visits}</span>
                 </div>
                 <div className="flex items-center">
-                  <FaStar className="mr-1" /> <span>{project.rating}</span>
+                  <FaStar className="mr-1" /> <span>{project.stars}</span>
                 </div>
                 <div>
                   <span>{formatDate(project.updated_at)}</span>

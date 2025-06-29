@@ -81,22 +81,7 @@ const ProjectsListItems = ({
             </span>
           ))}
         </div>
-        {status === "In Progress" && (
-          <div className="mb-3">
-            <div className="mb-1 flex justify-between text-xs">
-              <span className="text-gray-600 dark:text-gray-400">Progress</span>
-              <span className="font-medium dark:text-gray-400">
-                {progress}%
-              </span>
-            </div>
-            <div className="h-1.5 w-full rounded-full bg-gray-200 dark:bg-white">
-              <div
-                className="h-full rounded-full bg-indigo-600 dark:bg-indigo-700"
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
-          </div>
-        )}
+        
         <div className="mt-2 flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
           <div className="flex items-center">
             <FaEye className="mr-1" />
