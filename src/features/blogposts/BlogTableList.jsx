@@ -3,7 +3,6 @@ import Button from "../../components/Button";
 import Spinner from "../../components/Spinner";
 import { FaEdit, FaEye, FaTrashAlt } from "react-icons/fa";
 import { formatDate } from "../../helpers/formateDate";
-import { useNavigate } from "react-router-dom";
 import NewBlogPostModal from "./addNewBlogPost/NewBlogPostModal";
 
 const BlogTableList = ({ blogs, isFetching }) => {

@@ -4,7 +4,7 @@ import { supabase } from "./supabase";
 export const uploadImage = async (file) => {
   const uniqueName = `${Date.now()}-${Math.random()}`;
   console.log("uploading file to supabase", uniqueName);
-  const { data, error: uploadError } = await supabase.storage
+  const { error: uploadError } = await supabase.storage
     .from("project-images")
     .upload(`blog_posts/${uniqueName}`, file);
 
@@ -86,3 +86,36 @@ export const editBlogPost = async (id, blogData, blogImage) => {
 
   return data
 };
+
+
+export const deleteBlogPost = async (id) => {
+  const { data: blog, error: fetchError } = await supabase
+    .from("blog_posts")
+    .select('featured_image_url')
+    .eq("id", id)
+    .single();
+
+  if (fetchError) {
+    console.error("error fetching image urls", fetchError);
+  }
+  const pathsToDelete = [];
+  if (blog.featured_image_url) pathsToDelete.push(blog.featured_image_url);
+
+  if (pathsToDelete.length > 0) {
+    const { error: storageError } = await supabase.storage
+      .from("project-images")
+      .remove(pathsToDelete);
+    if (storageError) {
+      console.error("error deleting image from bucket", storageError);
+      return;
+    }
+  }
+  const { error: deleteError } = await supabase
+    .from("blog_posts")
+    .delete()
+    .eq("id", id);
+  if (deleteError) {
+    console.error("error deleting row", deleteError);
+  }
+};
+

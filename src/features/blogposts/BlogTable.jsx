@@ -1,10 +1,8 @@
 import React from "react";
 import BlogTableList from "./BlogTableList";
 import Pagination from "../../components/Pagination";
-import { useBlogPosts } from "./useBlogPosts";
 
-const BlogTable = () => {
-  const {getBlog, isFetching} = useBlogPosts()
+const BlogTable = ({ data, isLoading }) => {
   return (
     <div className="overflow-x-auto rounded-lg bg-white shadow dark:bg-gray-800">
       <table className="w-full">
@@ -23,7 +21,7 @@ const BlogTable = () => {
             <th className="px-4 py-3 text-left">Actions</th>
           </tr>
         </thead>
-        <BlogTableList blogs={getBlog} isFetching={isFetching} />
+        <BlogTableList blogs={data} isFetching={isLoading} />
       </table>
       <Pagination />
     </div>

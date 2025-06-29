@@ -25,7 +25,6 @@ const ProjectsListItems = ({
     stars,
     tech_stack,
     updated_at,
-    progress,
   } = project;
 
   const isOpenDropdown = showMenuDropdown === id;

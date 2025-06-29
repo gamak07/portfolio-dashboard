@@ -1,12 +1,12 @@
 import React from "react";
 import Breadcrum from "../features/blogposts/Breadcrum";
-import Header from "../features/blogposts/Header";
+import BlogContainer from "../features/blogposts/BlogContainer";
 
 const Blogposts = () => {
   return (
     <div>
       <Breadcrum />
-      <Header />
+      <BlogContainer />
     </div>
   );
 };
