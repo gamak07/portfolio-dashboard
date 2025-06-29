@@ -9,6 +9,9 @@ const ProjectsListItems = ({
   error,
   showMenuDropdown,
   handleMenuDropdown,
+  dropdownRef,
+  registerIgnoreRef,
+  clearIgnoreRefs,
 }) => {
   if (error) console.log("Error fetching data");
 
@@ -24,8 +27,11 @@ const ProjectsListItems = ({
     updated_at,
     progress,
   } = project;
+
+  const isOpenDropdown = showMenuDropdown === id;
   return (
     <div
+      ref={isOpenDropdown ? dropdownRef : null}
       key={id}
       className="flex rounded-lg bg-white shadow-sm transition-all duration-300 hover:shadow-md dark:bg-gray-800"
     >
@@ -42,7 +48,13 @@ const ProjectsListItems = ({
           <div className="cursor-pointer rounded-full bg-white p-2 opacity-90 shadow-sm dark:bg-gray-800">
             <FaEllipsisH className="text-gray-600 dark:text-gray-400" />
           </div>
-          {showMenuDropdown === id && <ProjectMenuDropdown project={project} />}
+          {showMenuDropdown === id && (
+            <ProjectMenuDropdown
+              project={project}
+              registerIgnoreRef={registerIgnoreRef}
+              clearIgnoreRefs={clearIgnoreRefs}
+            />
+          )}
         </div>
       </div>
       <div className="w-2/3 p-4">
@@ -51,7 +63,7 @@ const ProjectsListItems = ({
             {title}
           </h3>
           <div
-            className={`rounded-full px-2 py-1 text-xs font-medium capitalize ${status === "In Progress" ? "bg-blue-100 text-blue-800" : status === "In Review" ? "bg-yellow-100 text-yellow-800" : status === "completed" ? "bg-green-100 text-green-800" : ""}`}
+            className={`rounded-full px-2 py-1 text-xs font-medium capitalize ${status === "In Progress" ? "bg-blue-100 text-blue-800" : status === "In Review" ? "bg-yellow-100 text-yellow-800" : status === "completed" ? "bg-green-100 text-green-800" : status === "paused" ? "bg-gray-100 text-gray-800" : ""}`}
           >
             {status}
           </div>

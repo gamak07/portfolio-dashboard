@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { useProjects } from "./useProjects";
 import ProjectsListItems from "./ProjectsListItems";
 import Spinner from "../../components/Spinner";
+import { useOutsideClick } from "../../hooks/useOutsideClick";
 
 const ProjectsList = () => {
-  const [showMenuDropdown, setShowMenuDropdown] = useState(null);
-  const handleMenuDropdown = (index) => {
-    setShowMenuDropdown((prev) => (prev === index ? null : index));
-  };
+  const {
+    toggleDropdown,
+    isOpen,
+    dropdownRef,
+    registerIgnoreRef,
+    clearIgnoreRefs,
+  } = useOutsideClick();
 
   const { data, isLoading, error } = useProjects();
   if (isLoading) return <Spinner />;
@@ -19,8 +23,11 @@ const ProjectsList = () => {
           isLoading={isLoading}
           error={error}
           key={project.id}
-          showMenuDropdown={showMenuDropdown}
-          handleMenuDropdown={handleMenuDropdown}
+          showMenuDropdown={isOpen}
+          handleMenuDropdown={toggleDropdown}
+          dropdownRef={dropdownRef}
+          registerIgnoreRef={registerIgnoreRef}
+          clearIgnoreRefs={clearIgnoreRefs}
         />
       ))}
     </div>

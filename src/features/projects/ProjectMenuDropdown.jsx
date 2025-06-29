@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaArchive, FaEdit, FaEye, FaShare, FaTrashAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import AddNewProjects from "./AddNewProject/AddNewProjects";
 import { createPortal } from "react-dom";
 import { useDeleteProject } from "./useDeleteProject";
 
-const ProjectMenuDropdown = ({ project }) => {
+const ProjectMenuDropdown = ({
+  project,
+  registerIgnoreRef,
+  clearIgnoreRefs,
+}) => {
+  useEffect(() => {
+    return () => clearIgnoreRefs();
+  }, []);
   const navigate = useNavigate();
   const { delProject } = useDeleteProject();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -58,6 +65,7 @@ const ProjectMenuDropdown = ({ project }) => {
           <AddNewProjects
             initialData={project}
             setAddNewProjectModal={setIsEditModalOpen}
+            registerIgnoreRef={registerIgnoreRef}
           />,
           document.body,
         )}
