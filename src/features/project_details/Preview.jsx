@@ -10,6 +10,7 @@ import {
 import { formatDate } from "../../helpers/formateDate";
 import Button from "../../components/Button";
 import { getImageUrl } from "../../helpers/getImageUrl";
+import ToggleSwitch from "./ToggleSwitch";
 
 const Preview = () => {
   // Fetch project details using custom hook
@@ -17,6 +18,7 @@ const Preview = () => {
   const { project, isLoading } = useProjectDetails();
   if (isLoading) return <Spinner />;
   const {
+    id,
     status,
     type,
     category,
@@ -26,6 +28,7 @@ const Preview = () => {
     thumbnail_url,
     demo_url,
     source_code_url,
+    featured
   } = project;
 
   return (
@@ -82,6 +85,7 @@ const Preview = () => {
               </a>
             </Button>
           </div>
+          <ToggleSwitch label='Featured' featured={featured} id={id} />
         </div>
         <div className="">
           <img

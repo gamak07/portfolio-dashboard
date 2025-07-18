@@ -178,6 +178,9 @@ export const updateProject = async (
   }
 };
 
+export const featuredUpdate = async ()=>{
+  
+}
 
 export const deleteProject = async (id) => {
   const { data: record, error: fetchError } = await supabase
