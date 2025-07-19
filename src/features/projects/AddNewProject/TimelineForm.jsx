@@ -9,8 +9,8 @@ const TimelineForm = () => {
     formState: { errors },
   } = useFormContext();
 
-  const startDate = watch("startDate");
-  const endDate = watch("endDate");
+  const startDate = watch("start_date");
+  const endDate = watch("end_date");
 
   useEffect(() => {
     if (startDate && endDate) {
@@ -20,7 +20,7 @@ const TimelineForm = () => {
 
       if (!isNaN(timeDiff) && timeDiff >= 0) {
         const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-        setValue("duration", `${days} day(s)`);
+        setValue("duration", `${days} days`);
       } else {
         setValue("duration", "");
       }
@@ -41,7 +41,7 @@ const TimelineForm = () => {
           </label>
           <input
             type="date"
-            {...register("startDate")}
+            {...register("start_date")}
             className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
@@ -54,11 +54,11 @@ const TimelineForm = () => {
           </label>
           <input
             type="date"
-            {...register("endDate")}
+            {...register("end_date")}
             className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-indigo-500"
           />
-          {errors.endDate && (
-            <p className="text-sm text-red-500">{errors.endDate.message}</p>
+          {errors.end_date && (
+            <p className="text-sm text-red-500">{errors.end_date.message}</p>
           )}
         </div>
       </div>

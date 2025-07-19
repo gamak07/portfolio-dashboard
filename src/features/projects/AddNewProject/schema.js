@@ -58,7 +58,7 @@ export const techSchema = z.object({
 export const timelineBase = z.object({
   start_date: z.string().optional(),
   end_date: z.string().optional(),
-  duration: z.string().optional(),
+  duration: z.union([z.string(), z.number()]).optional(),
 });
 
 // 5) Features section

@@ -11,12 +11,15 @@ const AddNewProjects = ({
   const modalRef = useRef();
 
   useEffect(() => {
-    if (modalRef.current) {
+    if (modalRef.current && typeof registerIgnoreRef === "function") {
       registerIgnoreRef(modalRef.current);
     }
   }, []);
   return (
-    <div ref={modalRef} className="fixed inset-0 z-50 flex items-center justify-center">
+    <div
+      ref={modalRef}
+      className="fixed inset-0 z-50 flex items-center justify-center"
+    >
       <div className="absolute inset-0 bg-black/10 backdrop-blur"></div>
       <div
         className="relative mx-4 max-h-[90vh] w-full max-w-3/4 overflow-y-auto rounded-lg bg-white shadow-lg dark:bg-gray-800"

@@ -5,6 +5,7 @@ import Button from "../../../components/Button";
 const TechForm = () => {
   const {
     register,
+    watch,
     setValue,
     getValues,
     formState: { errors },
@@ -12,29 +13,33 @@ const TechForm = () => {
 
   const [inputValue, setInputValue] = useState("");
 
-  const handleAddTech = () => {
+  const tech = watch("tech_stack") || [];
+
+  // Add a new tag to the tags array
+  const handleAddTechStack = () => {
     const trimmed = inputValue.trim();
     if (!trimmed) return;
-
-    const currentStack = getValues("techStack") || [];
-    if (currentStack.includes(trimmed)) return; // Prevent duplicates
-
-    const updated = [...currentStack, trimmed];
-    setValue("techStack", updated);
-    setInputValue(""); // clear input
+    const existing = getValues("tech_stack") || [];
+    if (existing.includes(trimmed)) {
+      setInputValue("");
+      return;
+    }
+    setValue("tech_stack", [...existing, trimmed], { shouldValidate: true });
+    setInputValue("");
   };
 
-  const handleRemoveTech = (tech) => {
-    const current = getValues("techStack") || [];
-    const updated = current.filter((t) => t !== tech);
-    setValue("techStack", updated);
+  // Remove a tag by index
+  const handleRemoveTechStack = (indexToRemove) => {
+    const current = getValues("tech_stack") || [];
+    const updated = current.filter((_, idx) => idx !== indexToRemove);
+    setValue("techStack", updated, { shouldValidate: true });
   };
 
   return (
     <div className="space-y-4 overflow-auto p-4">
       <div>
         <label
-          htmlFor="techStack"
+          htmlFor="tech_stack"
           className="mb-1 text-sm font-medium text-gray-800"
         >
           Tech Stack
@@ -49,25 +54,25 @@ const TechForm = () => {
           />
           <Button
             type="button"
-            onClick={handleAddTech}
+            onClick={handleAddTechStack}
             className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
           >
             Add
           </Button>
         </div>
-        {errors.techStack && (
-          <p className="text-sm text-red-500">{errors.techStack.message}</p>
+        {errors.tech_stack && (
+          <p className="text-sm text-red-500">{errors.tech_stack.message}</p>
         )}
         <div className="mt-2 flex flex-wrap gap-2">
-          {getValues("techStack")?.map((tech, index) => (
+          {tech?.map((field, index) => (
             <span
               key={index}
               className="flex items-center gap-1 rounded-full bg-gray-200 px-3 py-1 text-sm text-gray-700"
             >
-              {tech}
+              {field}
               <button
                 type="button"
-                onClick={() => handleRemoveTech(tech)}
+                onClick={() => handleRemoveTechStack(index)}
                 className="text-red-500 hover:text-red-700"
               >
                 ×
