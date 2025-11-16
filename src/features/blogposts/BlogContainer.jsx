@@ -4,7 +4,7 @@ import BlogTable from "./BlogTable";
 import BlogGrid from "./BlogGrid";
 import NewBlogPostModal from "./addNewBlogPost/NewBlogPostModal";
 import Header from "./Header";
-import { useBlogPosts } from "./useBlogPosts";
+import { useBlogPosts } from "../../hooks/blog/useBlogPosts";
 
 const BlogContainer = () => {
   const [showDropdown, setShowDropdown] = useState(false);

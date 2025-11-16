@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es5", // Compile down to ES5 for older browser compatibility
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ], // Standard libraries to include
+    "allowJs": true, // IMPORTANT: Allows JavaScript files to be compiled alongside TypeScript files. This is key for a gradual migration.
+    "skipLibCheck": true, // Skips type checking of declaration files (.d.ts)
+    "esModuleInterop": true, // Allows default imports from modules with no default export
+    "allowSyntheticDefaultImports": true, // Part of esModuleInterop
+    "strict": true, // Enables all strict type-checking options
+    "forceConsistentCasingInFileNames": true, // Enforces consistent file naming
+    "noFallthroughCasesInSwitch": true, // Reports errors for fallthrough cases in switch statements
+    "module": "esnext", // Use modern module syntax
+    "moduleResolution": "bundler", // How modules get resolved (like Node.js does)
+    "resolveJsonModule": true, // Allows importing .json files
+    "isolatedModules": true, // Ensures each file can be safely compiled without relying on other files
+    "noEmit": true, // IMPORTANT: Create React App handles the actual code bundling. This tells TypeScript to *only* do type-checking.
+    "jsx": "react-jsx" // Tells TypeScript how to handle JSX syntax
+  },
+  "include": [
+    "src" // Tells TypeScript to only check files inside the 'src' folder
+  ]
+}
