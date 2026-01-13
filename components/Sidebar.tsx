@@ -18,13 +18,13 @@ import {
 } from 'react-icons/ri'
 
 const navItems = [
-  { label: 'Overview', href: '/dashboard', icon: RiDashboardLine },
-  { label: 'Analytics', href: '/dashboard/analytics', icon: RiLineChartLine },
-  { label: 'Content', href: '/dashboard/content', icon: RiFileList3Line },
-  { label: 'Newsletter', href: '/dashboard/newsletter', icon: RiMailSendLine },
-  { label: 'Messages', href: '/dashboard/messages', icon: RiMessage3Line },
-  { label: 'Profile Manager', href: '/dashboard/profile', icon: RiUserSettingsLine },
-  { label: 'Settings', href: '/dashboard/settings', icon: RiSettings3Line },
+  { label: 'Overview', href: '/', icon: RiDashboardLine },
+  { label: 'Analytics', href: '/analytics', icon: RiLineChartLine },
+  { label: 'Content', href: '/content', icon: RiFileList3Line },
+  { label: 'Newsletter', href: '/newsletter', icon: RiMailSendLine },
+  { label: 'Messages', href: '/messages', icon: RiMessage3Line },
+  { label: 'Profile Manager', href: '/profile', icon: RiUserSettingsLine },
+  { label: 'Settings', href: '/settings', icon: RiSettings3Line },
 ]
 
 export function Sidebar() {

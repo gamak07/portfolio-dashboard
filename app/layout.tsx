@@ -3,6 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
 import { Header } from "@/components/Header";
+import { ModalProvider } from "@/lib/modalContext";
+import { GlobalModalWrapper } from "@/components/GlobalModalWrapper";
+import { QueryProvider } from "@/components/QueryProvider";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,12 +33,23 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="min-h-screen bg-slate-950">
-          <Sidebar />
-          <Header />
+        <QueryProvider>
+          <ModalProvider>
+            <div className="min-h-screen bg-slate-950">
+              <Sidebar />
+              <Header />
 
-          <main className="ml-64 pt-16">{children}</main>
-        </div>
+              <main className="ml-64 pt-16">{children}</main>
+              <Toaster
+                position="top-center"
+                richColors
+                theme="dark"
+                closeButton
+              />
+              <GlobalModalWrapper />
+            </div>
+          </ModalProvider>
+        </QueryProvider>
       </body>
     </html>
   );
