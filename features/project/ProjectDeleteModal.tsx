@@ -1,16 +1,39 @@
 'use client'
 
-import { RiAlertLine, RiInformationLine, RiDeleteBinLine } from "react-icons/ri"
+import { useDeleteProject } from "@/hooks/useProject"
+import { Project } from "@/lib/types/project"
+import { RiAlertLine, RiInformationLine, RiDeleteBinLine, RiLoader4Line } from "react-icons/ri"
+import { toast } from "sonner"
 
 interface ProjectDeleteModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  project: any
+  project: Project
   onConfirm: () => void
 }
 
 export function ProjectDeleteModal({ open, onOpenChange, project, onConfirm }: ProjectDeleteModalProps) {
+  const { mutateAsync: deleteProject, isPending } = useDeleteProject()
+
   if (!open || !project) return null
+
+  // 2. Handle Deletion Logic
+  const handleDelete = async () => {
+    try {
+      // Execute the mutation (API Call)
+      await toast.promise(deleteProject(project.id), {
+        loading: 'Deleting project and cleaning up files...',
+        success: 'Project deleted successfully',
+        error: (err) => `Failed to delete: ${err.message}`
+      })
+      
+      // Close modal on success
+      onOpenChange(false)
+    } catch (error) {
+      // Error is handled by toast, we just catch to prevent crash
+      console.error(error)
+    }
+  }
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
@@ -57,11 +80,15 @@ export function ProjectDeleteModal({ open, onOpenChange, project, onConfirm }: P
             Cancel
           </button>
           <button 
-            onClick={onConfirm}
+            onClick={handleDelete}
             className="px-6 py-2.5 bg-red-600 hover:bg-red-500 text-white rounded-lg font-medium transition-colors whitespace-nowrap flex items-center"
           >
-            <RiDeleteBinLine className="mr-2 w-4 h-4" />
-            Delete Project
+            {isPending ? (
+               <RiLoader4Line className="mr-2 w-4 h-4 animate-spin" />
+            ) : (
+               <RiDeleteBinLine className="mr-2 w-4 h-4" />
+            )}
+            {isPending ? "Deleting..." : "Delete Project"}
           </button>
         </div>
 

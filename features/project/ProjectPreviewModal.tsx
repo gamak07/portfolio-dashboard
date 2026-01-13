@@ -2,11 +2,12 @@
 
 import { RiCloseLine, RiFolderLine, RiStarFill, RiExternalLinkLine, RiGithubFill, RiEditLine } from "react-icons/ri"
 import { useModal } from "@/lib/modalContext"
+import { Project } from "@/lib/types/project"
 
 interface ProjectPreviewModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  project: any // In a real app, use the Project type
+  project: Project 
 }
 
 export function ProjectPreviewModal({ open, onOpenChange, project }: ProjectPreviewModalProps) {
@@ -68,7 +69,7 @@ export function ProjectPreviewModal({ open, onOpenChange, project }: ProjectPrev
               <span className="px-3 py-1.5 bg-slate-700 text-slate-300 rounded-full text-sm font-medium">
                 {project.category || project.type}
               </span>
-              {project.isFeatured && (
+              {project.featured && (
                 <span className="px-3 py-1.5 bg-yellow-500/20 text-yellow-400 rounded-full text-sm font-medium flex items-center gap-1">
                   <RiStarFill className="w-4 h-4" />
                   Featured
@@ -100,7 +101,7 @@ export function ProjectPreviewModal({ open, onOpenChange, project }: ProjectPrev
               </div>
               <div className="bg-slate-700 border border-slate-600 rounded-lg p-4">
                 <div className="text-slate-400 text-xs font-medium mb-1">Last Updated</div>
-                <div className="text-white text-sm font-medium">{project.updated || "N/A"}</div>
+                <div className="text-white text-sm font-medium">{project.updated_at ? new Date(project.updated_at).toLocaleDateString() : '-'}</div>
               </div>
             </div>
 
@@ -128,7 +129,7 @@ export function ProjectPreviewModal({ open, onOpenChange, project }: ProjectPrev
                   <div className="text-slate-400 text-xs">View project</div>
                 </div>
               </a>
-              <a href={project.repo_url || "#"} target="_blank" className="flex items-center gap-3 bg-slate-700 border border-slate-600 rounded-lg p-4 hover:border-cyan-500 transition-colors">
+              <a href={project.source_code_url || "#"} target="_blank" className="flex items-center gap-3 bg-slate-700 border border-slate-600 rounded-lg p-4 hover:border-cyan-500 transition-colors">
                 <div className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center">
                   <RiGithubFill className="text-cyan-400 w-5 h-5" />
                 </div>

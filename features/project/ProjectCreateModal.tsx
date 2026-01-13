@@ -2,11 +2,12 @@
 
 import { RiCloseLine } from "react-icons/ri"
 import { ProjectFormWrapper } from "./ProjectFormWrapper"
+import { Project } from "@/lib/types/project"
 
 interface ProjectCreateModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  initialData?: any // New Prop
+  initialData?: Project 
 }
 
 export function ProjectCreateModal({ open, onOpenChange, initialData }: ProjectCreateModalProps) {
@@ -33,7 +34,7 @@ export function ProjectCreateModal({ open, onOpenChange, initialData }: ProjectC
         <div className="flex-1 overflow-hidden flex flex-col">
           <ProjectFormWrapper
             onSuccess={() => onOpenChange(false)} 
-            initialData={initialData} // Pass it down
+            initialData={initialData} 
           />
         </div>
 

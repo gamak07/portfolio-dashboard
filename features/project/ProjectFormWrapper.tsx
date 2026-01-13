@@ -70,8 +70,7 @@ export function ProjectFormWrapper({
   initialData,
 }: {
   onSuccess: () => void;
-  // FIX 2: Strict typing instead of 'any'
-  initialData: Project | null;
+  initialData: Project | null | undefined ;
 }) {
   const [activeTab, setActiveTab] = useState("Basic Info");
   const isEditing = !!initialData;
@@ -85,8 +84,6 @@ export function ProjectFormWrapper({
   const formValues = useMemo(() => {
     if (!initialData) return defaultValues;
 
-    // We map DB fields to Form fields explicitly to avoid 'null' issues in inputs
-    // (React inputs hate 'null', they prefer empty string '')
     return {
         title: initialData.title,
         slug: initialData.slug,

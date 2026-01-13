@@ -11,7 +11,7 @@ export type Project = {
   description: string
   featured: boolean
   type: 'Web' | 'Mobile'
-  status: 'In Progress' | 'Completed' | 'Paused' | 'In Review'
+  status: 'Published' | 'In Progress' | 'Completed' | 'Paused' | 'In Review'
   category: 'Personal' | 'Freelance' | 'Hackathon'
   
   // Media
