@@ -4,22 +4,32 @@ import { useState } from "react";
 import { RiFolderLine, RiArticleLine, RiAddLine } from "react-icons/ri";
 import { cn } from "@/lib/utils";
 import { ContentToolbar } from "./ContentToolbar";
-import { ProjectList } from "./ProjectList";
-import { BlogList } from "./BlogList";
-import { ProjectCreateModal } from "../project/ProjectCreateModal";
+import ProjectList from "./ProjectList";
+import BlogList from "./BlogList";
 import { useModal } from "@/lib/modalContext";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 
 export default function ContentManager() {
-  const [activeTab, setActiveTab] = useState<"projects" | "blogs">("projects");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { openModal } = useModal();
 
-  // State to control the modal
-  const { openModal } = useModal()
+  const activeTab = searchParams.get("tab") === "blogs" ? "blogs" : "projects";
+
+  const handleTabChange = useCallback((tab: "projects" | "blogs") => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", tab);
+    
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  }, [searchParams, pathname, router]);
 
   const handleCreate = () => {
     if (activeTab === "projects") {
       openModal('project');
     } else {
-      console.log("Open Blog Modal");
+      openModal('blog');
     }
   };
 
@@ -38,7 +48,7 @@ export default function ContentManager() {
           {/* Custom Tab Switcher */}
           <div className="flex items-center gap-2 bg-slate-800 border border-slate-700 rounded-lg p-1">
             <button
-              onClick={() => setActiveTab("projects")}
+              onClick={() => handleTabChange("projects")}
               className={cn(
                 "px-6 py-2.5 rounded-md font-medium transition-all whitespace-nowrap flex items-center",
                 activeTab === "projects"
@@ -50,7 +60,7 @@ export default function ContentManager() {
               Projects
             </button>
             <button
-              onClick={() => setActiveTab("blogs")}
+              onClick={() => handleTabChange("blogs")}
               className={cn(
                 "px-6 py-2.5 rounded-md font-medium transition-all whitespace-nowrap flex items-center",
                 activeTab === "blogs"

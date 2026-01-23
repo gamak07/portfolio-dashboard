@@ -1,20 +1,18 @@
 'use client'
 
+import { BlogCreateModal } from "@/features/blog/BlogCreateModal"
+import { BlogDeleteModal } from "@/features/blog/BlogDeleteModal"
+import { BlogPreviewModal } from "@/features/blog/BlogPreviewModal"
 import { ProjectCreateModal } from "@/features/project/ProjectCreateModal"
 import { ProjectDeleteModal } from "@/features/project/ProjectDeleteModal"
 import { ProjectPreviewModal } from "@/features/project/ProjectPreviewModal"
 import { useModal } from "@/lib/modalContext"
 
-// import { BlogCreateModal } from "@/components/admin/content/blog/blog-create-modal" // Coming soon
 
 export function GlobalModalWrapper() {
-  const { activeModal, closeModal, data } = useModal()
+  const { activeModal, openModal, closeModal, data } = useModal()
 
-  const handleDelete = () => {
-    console.log("Deleting project:", data.id)
-    // Here you would call your API to delete the project
-    closeModal()
-  }
+  
 
   return (
     <>
@@ -35,15 +33,29 @@ export function GlobalModalWrapper() {
         open={activeModal === 'project-delete'} 
         onOpenChange={(isOpen) => !isOpen && closeModal()} 
         project={data}
-        onConfirm={handleDelete}
       />
 
-      {/* Blog Modal (Placeholder for now) */}
-      {/* <BlogCreateModal 
+      <BlogCreateModal
         open={activeModal === 'blog'} 
         onOpenChange={(isOpen) => !isOpen && closeModal()} 
-      /> 
-      */}
+        initialData={data}
+      />
+
+      <BlogPreviewModal
+        open={activeModal === 'blog-view'} 
+        onOpenChange={(isOpen) => !isOpen && closeModal()} 
+        blog={data}
+        onEdit={() => {
+           // Switch from View -> Edit mode
+           openModal('blog', data)
+        }}
+      />
+
+      <BlogDeleteModal
+        open={activeModal === 'blog-delete'} 
+        onOpenChange={(isOpen) => !isOpen && closeModal()} 
+        blog={data}
+      />
     </>
   )
 }

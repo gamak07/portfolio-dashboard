@@ -2,6 +2,8 @@
 
 import { useDeleteProject, useProjects } from "@/hooks/useProject";
 import { useModal } from "@/lib/modalContext";
+import { Project } from "@/lib/types/project";
+import { useSearchParams } from "next/navigation";
 import {
   RiStarFill,
   RiEditLine,
@@ -13,66 +15,29 @@ import {
   RiErrorWarningLine,
   RiInboxLine,
 } from "react-icons/ri";
-import { toast } from "sonner";
 
-// Mock Data matching your Project Type + UI Metrics
-const projects = [
-  {
-    id: "1",
-    title: "AI-Powered Dashboard",
-    category: "Web App",
-    status: "Published",
-    views: "68,871",
-    clicks: "8,542",
-    updated: "2024-01-15",
-    isFeatured: true,
-    type: "web",
-  },
-  {
-    id: "2",
-    title: "E-commerce Platform",
-    category: "Web App",
-    status: "Published",
-    views: "66,954",
-    clicks: "7,231",
-    updated: "2024-01-14",
-    isFeatured: true,
-    type: "web",
-  },
-  {
-    id: "3",
-    title: "Mobile Banking App",
-    category: "Mobile",
-    status: "Published",
-    views: "71,052",
-    clicks: "6,892",
-    updated: "2024-01-13",
-    isFeatured: false,
-    type: "mobile",
-  },
-  {
-    id: "4",
-    title: "Social Media Analytics",
-    category: "Web App",
-    status: "Draft",
-    views: "63,404",
-    clicks: "5,643",
-    updated: "2024-01-12",
-    isFeatured: false,
-    type: "web",
-  },
-];
 
-export function ProjectList() {
+export default function ProjectList() {
   const { openModal } = useModal();
+  const searchParams = useSearchParams();
   const { data: projects, isLoading, isError } = useProjects();
-  
-  // 2. Delete Logic
-  const { mutateAsync: deleteProject } = useDeleteProject();
 
-  
+  const searchQuery = searchParams.get("q")?.toLowerCase() || "";
+  const statusFilter = searchParams.get("status") || "all";
 
-  const handleEdit = (project: any) => {
+  const filteredProjects = projects?.filter((project) => {
+    // 1. Search Filter
+    const matchesSearch = project.title?.toLowerCase().includes(searchQuery);
+
+    // 2. Status Filter (Direct String Match)
+    const matchesStatus = statusFilter === "all" 
+      ? true 
+      : project.status === statusFilter; // e.g. "Published" === "Published"
+
+    return matchesSearch && matchesStatus;
+  });
+
+  const handleEdit = (project: Project) => {
     openModal("project", project);
   };
 
@@ -133,14 +98,14 @@ export function ProjectList() {
             )}
 
             {/* 3. Empty State */}
-            {!isLoading && !isError && projects?.length === 0 && renderTableState(
+            {!isLoading && !isError && filteredProjects?.length === 0 && renderTableState(
               <RiInboxLine className="w-8 h-8 mb-2" />, 
               "No projects found.", 
               "text-slate-500"
             )}
 
             {/* 4. Data Listing */}
-            {!isLoading && !isError && projects?.map((project: any) => (
+            {!isLoading && !isError && filteredProjects?.map((project: any) => (
               <tr
                 key={project.id}
                 className="hover:bg-slate-700/50 transition-colors group"

@@ -2,7 +2,14 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 
-type ModalType = "project" | "project-view" | "blog" | 'project-delete' | null;
+type ModalType =
+  | "project"
+  | "project-view"
+  | "blog"
+  | "project-delete"
+  | "blog-view"
+  | "blog-delete"
+  | null;
 
 interface ModalContextType {
   activeModal: ModalType;
